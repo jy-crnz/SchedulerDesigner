@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sched Designer">
+    <link rel="apple-touch-icon" href="AppIcon.png">
+
+    <link rel="icon" type="image/png" href="AppIcon1.png">
+
+    <title>Schedule Designer</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0-rc.2/default.css">
+    <script src="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0-rc.2/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0-rc.2/scroll-behaviour.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <header>
+                <h1>Sched Wallpaper Generator</h1>
+                <p>Create your custom schedule wallpaper</p>
+            </header>
+
+            <button id="helpBtn" class="btn-secondary" style="margin-bottom: 20px;">📖 How to Use</button>
+
+            <div class="control-section">
+                <label>Header Settings</label>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Start Year</label>
+                        <input type="text" id="yearStartInput" placeholder="2025">
+                    </div>
+                    <div class="input-group">
+                        <label>End Year</label>
+                        <input type="text" id="yearEndInput" placeholder="2026">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Term No</label>
+                    <input type="text" id="termInput" placeholder="TERM 1">
+                </div>
+            </div>
+
+            <div class="control-section">
+                <div class="input-group">
+                    <label>Subject Name</label>
+                    <input type="text" id="subInput" placeholder="e.g., DATABASE">
+                </div>
+
+                <div class="input-group">
+                    <label>Time & Subject Code</label>
+                    <input type="text" id="timeInput" placeholder="8:00 - 11:00">
+                    <input type="text" id="roomInput" placeholder="IT331L">
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Day</label>
+                        <select id="dayInput">
+                            <option value="0">Monday</option>
+                            <option value="1">Tuesday</option>
+                            <option value="2">Wednesday</option>
+                            <option value="3">Thursday</option>
+                            <option value="4">Friday</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Row (1-5)</label>
+                        <input type="number" id="rowInput" min="1" max="5" placeholder="1">
+                    </div>
+                </div>
+
+                <button id="addBtn" class="btn-primary">Add to Grid</button>
+                <button id="clearBtn" class="btn-secondary">Clear Grid</button>
+            </div>
+
+            <div class="control-section">
+                <label>Select Theme</label>
+                <div class="theme-grid">
+                    <button class="theme-dot classic" style="background: white; border: 2px solid #1a237e;"></button>
+                    <button class="theme-dot dark" style="background: #333; border: 2px solid #555;"></button>
+                    <button class="theme-dot neon" style="background: black; border: 2px solid #00f3ff;"></button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="preview-area">
+            <div id="scale-wrap">
+                <div id="wallpaper-container" class="theme-classic">
+                    <div class="wp-header">
+                        <div class="year-box" id="yearStartLabel">2025</div>
+                        <div class="term-box" id="termLabel">TERM 1</div>
+                        <div class="year-box" id="yearEndLabel">2026</div>
+                    </div>
+
+                    <div class="schedule-grid" id="grid">
+                        <div class="grid-cell day-label">MON</div>
+                        <div class="grid-cell day-label">TUE</div>
+                        <div class="grid-cell day-label">WED</div>
+                        <div class="grid-cell day-label">THU</div>
+                        <div class="grid-cell day-label">FRI</div>
+                    </div>
+
+                    <footer class="wp-footer">
+                        <p id="footerLabel"></p>
+                    </footer>
+                </div>
+
+                <button id="downloadBtn" class="btn-download">Download Wallpaper</button>
+            </div>
+        </main>
+    </div>
+
+    <div id="editModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modalTitle">Edit Element</h2>
+            <div id="modalBody"></div>
+            <div class="modal-actions">
+                <button id="modalApply" class="btn-primary">Apply Changes</button>
+                <button id="modalClear" class="btn-clear">Clear Cell</button>
+                <button id="modalStar" class="btn-star">Place Star</button>
+                <button id="modalClose" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="helpModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Designer Guide</h2>
+            <ul class="guide-list" style="list-style: none; color: white; line-height: 2; margin: 20px 0;">
+                <li>🎯 <b>Tap any cell</b> to edit subjects or add stars.</li>
+                <li>✏️ <b>Tap headers</b> to change years and terms.</li>
+                <li>🔄 <b>Long-press & Drag</b> subjects to swap slots.</li>
+                <li>🎨 <b>Select Themes</b> to instantly style the grid.</li>
+                <li>📸 <b>Download</b> to save your high-res PNG.</li>
+            </ul>
+            <button id="helpClose" class="btn-primary" style="width: 100%;">Got it!</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
