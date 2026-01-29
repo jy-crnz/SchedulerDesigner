@@ -1,8 +1,8 @@
-## LabGrid - Premium Schedule Builder 📅
+# LabGrid - Premium Schedule Builder 📅
 
 **LabGrid** is a high-contrast, mobile-first schedule companion designed for high performance and custom lock-screen wallpaper generation. It features a refined design system, a robust mobile drag-and-drop engine, and persistent storage for seamless academic or professional tracking.
 
-### ✨ Premium Features
+## ✨ Premium Features
 
 #### ☀️ Dynamic Theme System
 * **Solar Flare (Classic White):** A clean, high-visibility layout with professional blue and red accents.
