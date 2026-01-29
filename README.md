@@ -1,52 +1,42 @@
-📅 Glassmorphism Schedule Generator
-A sleek, high-performance schedule builder designed specifically to create custom mobile wallpapers. This tool provides a premium, interactive experience whether you're managing university labs or tracking complex daily tasks.
+## LabGrid - Premium Schedule Builder 📅
 
-✨ Features
-Glassmorphism UI: Utilizes modern CSS backdrop-filters and neon color palettes to create a futuristic, translucent aesthetic.
+**LabGrid** is a high-contrast, mobile-first schedule companion designed for high performance and custom lock-screen wallpaper generation. It features a refined design system, a robust mobile drag-and-drop engine, and persistent storage for seamless academic or professional tracking.
 
-Mobile-Native Drag & Drop: A robust implementation powered by the mobile-drag-drop polyfill, enabling seamless cell swapping on touch devices.
+### ✨ Premium Features
 
-Secure Handshake Logic: Features an integrated draggedIndex global state to ensure drop reliability even when mobile browsers lose dataTransfer packets.
+#### ☀️ Dynamic Theme System
+* **Solar Flare (Classic White):** A clean, high-visibility layout with professional blue and red accents.
+* **Deep Charcoal (Dark Mode):** A high-performance aesthetic designed to reduce eye strain during late-night study sessions.
+* **Neon Cyber:** A vibrant theme featuring glowing cyan and pink borders for a high-energy workspace.
+* **Seamless Transitions:** Smooth color-morphing across the header, footer, and grid cells during theme switching.
 
-High-Res Wallpaper Export: Generates 3x scale PNG images via html2canvas, optimized for high-density smartphone lock screens.
+#### ⠿ Pro-Grade Drag & Drop
+* **Touch-Optimized Polyfill:** Built-in support for mobile browsers using a custom long-press "claim" system (300ms).
+* **Secure Handshake Logic:** A global state-tracking system (`draggedIndex`) that prevents "snap-back" errors by securing cell IDs during the move.
+* **Visual Target Feedback:** Purple dashed borders and "ghost" cell effects that provide real-time confirmation of your drop target.
+* **Pointer-Passthrough:** Advanced CSS logic (`pointer-events: none`) that allows touch events to "see through" the dragging cell to the target beneath.
 
-Persistent Memory: All schedule data and theme preferences are saved to localStorage, so your work is preserved even after a browser refresh.
 
-Smart Scaling: Real-time preview scaling ensures the workspace remains usable across all screen dimensions.
 
-📲 How to Add to Home Screen
-For the best experience, add this app to your home screen to use it like a native mobile application without the browser address bar.
+### 🧠 Intelligent Workspace Logic
+* **Contextual Edit Modals:** Smart panels that adapt their inputs based on whether you are editing a header or a subject cell.
+* **Interactive Star Toggle:** A dedicated "Importance" marker (★) that can be added to any cell with a single tap.
+* **Auto-Scaling Preview:** A responsive scaling engine that perfectly fits the wallpaper workspace to any device screen size.
 
-On iOS (Safari)
-Open the app URL in Safari.
+### 📊 High-Resolution Export
+* **3x PNG Rendering:** Utilizes `html2canvas` to capture wallpapers at triple-scale for crystal-clear quality on high-density displays.
+* **Smart UI Masking:** Automatically hides drag handles and editing icons during the export process for a clean final look.
+* **Instant Download:** Direct-to-device file generation with unique timestamps for every version of your schedule.
 
-Tap the Share button (the square with an upward arrow) at the bottom of the screen.
+## 🛠️ Tech Stack
+* **HTML5:** Semantic architecture for a clean, accessible mobile application feel.
+* **CSS3:** Custom properties (CSS Variables), backdrop-blur filters for glassmorphism, and hardware-accelerated animations.
+* **Vanilla JavaScript:** Lightweight, high-speed logic with `localStorage` for persistent data tracking and grid state management.
 
-Scroll down the list of options and tap Add to Home Screen.
+## 📸 Screenshots Light Mode & Dark Mode
+<img width="396" height="858" alt="Light Mode Preview" src="https://github.com/user-attachments/assets/1a17b083-65fd-4392-9fca-f6a02d9b3a2f" /> <img width="391" height="853" alt="Dark Mode Preview" src="https://github.com/user-attachments/assets/5268a411-79ac-4e13-8597-d6582bfbf704" />
 
-Name the app and tap Add in the top-right corner.
-
-On Android (Chrome)
-Open the app URL in Chrome.
-
-Tap the Three Dots (menu icon) in the top-right corner.
-
-Tap Add to Home screen.
-
-Follow the prompts to name the shortcut and confirm by tapping Add.
-
-🛠️ Built With
-HTML5 / CSS3: Custom grid layout with -webkit specific mobile optimizations to prevent accidental scrolling.
-
-Vanilla JavaScript: State management and custom event listeners for refined drag/drop interactions.
-
-html2canvas: Used for capturing the wallpaper container as a clean, high-resolution image.
-
-mobile-drag-drop: Essential polyfill for bridging the gap between desktop and mobile browser functionality.
-
-📱 Mobile Interaction Guide
-Pro Tip: To move a cell, use a Long-Press (300ms) on the handle icon (⠿) to activate the drag state.
-
-Visual Feedback: A purple dashed border will appear to confirm your target cell as you hover.
-
-The Passthrough: The app uses pointer-events: none during the drag to allow touch events to "hit" cells hidden behind your finger.
+## 🚀 Getting Started
+1. Clone the repository to your local machine.
+2. Open `index.html` in any mobile or desktop browser.
+3. **For the Best Experience:** Follow the "Add to Home Screen" prompts on your iOS or Android device to remove the browser address bar for a native app feel.
