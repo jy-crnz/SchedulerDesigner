@@ -33,9 +33,6 @@
 * **CSS3:** Custom properties (CSS Variables), backdrop-blur filters for glassmorphism, and hardware-accelerated animations.
 * **Vanilla JavaScript:** Lightweight, high-speed logic with `localStorage` for persistent data tracking and grid state management.
 
-## 📸 Screenshots Light Mode & Dark Mode
-<img width="396" height="858" alt="Light Mode Preview" src="https://github.com/user-attachments/assets/1a17b083-65fd-4392-9fca-f6a02d9b3a2f" /> <img width="391" height="853" alt="Dark Mode Preview" src="https://github.com/user-attachments/assets/5268a411-79ac-4e13-8597-d6582bfbf704" />
-
 ## 🚀 Getting Started
 1. Clone the repository to your local machine.
 2. Open `index.html` in any mobile or desktop browser.
