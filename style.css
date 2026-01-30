@@ -19,7 +19,7 @@
     --bg: #ffffff;
     --grid-line: #1a237e;
     --header-text: #ffffff;
-        /* Default is white */
+    /* Default is white */
 }
 
 /* Theme Variants */
@@ -354,7 +354,7 @@ button {
     background: var(--grid-line) !important;
     color: var(--bg) !important;
     font-weight: 900;
-    font-size: 11px;    
+    font-size: 11px;
     cursor: default;
 }
 
@@ -385,7 +385,7 @@ button {
     /* This is the magic nudge: 
        Increasing padding-bottom pushes the text UP.
        Try 4px, 6px, or 8px to match your preview. */
-    padding-bottom: 6px !important;
+    padding-bottom: 4px !important;
     padding-top: 0 !important;
 
     box-sizing: border-box;
@@ -393,7 +393,7 @@ button {
 
 #wallpaper-container.is-exporting .year-box {
     /* Increasing this value pushes the text further left */
-    padding-right: 4px !important;
+    padding-right: 2px !important;
 
     /* Ensure flex centering remains the anchor */
     display: flex !important;
@@ -419,7 +419,8 @@ button {
     display: flex !important;
 }
 
-.drag-handle, .drag-handle span {
+.drag-handle,
+.drag-handle span {
     pointer-events: none !important;
 }
 
@@ -638,4 +639,52 @@ button {
 
 .dnd-poly-drag-image {
     pointer-events: none !important;
+}
+
+#modalMove {
+    background: rgba(0, 243, 255, 0.1);
+    color: var(--accent-cyan);
+    border: 1px solid var(--accent-cyan);
+    padding: 12px;
+    width: 100%;
+    margin-top: 5px;
+    font-weight: 700;
+    border-radius: 12px;
+    text-transform: uppercase;
+}
+
+.btn-action-cyan {
+    flex: 1;
+    background: rgba(0, 243, 255, 0.1);
+    color: var(--accent-cyan);
+    border: 1px solid var(--accent-cyan);
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.btn-action-cyan:hover {
+    background: rgba(0, 243, 255, 0.2);
+}
+
+.btn-action-red {
+    flex: 1;
+    background: rgba(211, 47, 47, 0.1);
+    color: #ff8a80;
+    border: 1px solid #ff8a80;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 11px;
+    /* Slightly smaller to fit 3 buttons */
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-action-red:hover {
+    background: rgba(211, 47, 47, 0.2);
 }
