@@ -366,25 +366,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     downloadBtn.onclick = () => {
+        // 1. Enter export mode to trigger the 'is-exporting' CSS
         wpContainer.classList.add('is-exporting');
 
-        // Small delay to let the browser stabilize the text alignment
+        // 2. Small delay to let the mobile browser "lock" the text positions
         setTimeout(() => {
             html2canvas(wpContainer, {
                 scale: 3,
                 useCORS: true,
                 logging: false,
-                backgroundColor: "#ffffff", // Forces white background for the whole export
+                backgroundColor: "#ffffff", // Matches the white "phone" look in your preview
                 scrollX: 0,
                 scrollY: -window.scrollY
             }).then(canvas => {
                 wpContainer.classList.remove('is-exporting');
+
                 const link = document.createElement('a');
                 link.download = `MySchedule-${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
             });
-        }, 500); // 500ms is the "sweet spot" for mobile renders
+        }, 500);
     };
     
     clearBtn.onclick = () => {
