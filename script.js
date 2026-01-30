@@ -315,10 +315,15 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateHeader = () => {
-        // We target the span inside to keep the flex centering logic of the parent box
-        yearStartLabel.querySelector('span').innerText = yearStartInput.value || "2025";
-        yearEndLabel.querySelector('span').innerText = yearEndInput.value || "2026";
-        termLabel.querySelector('span').innerText = (termInput.value || "TERM 1").toUpperCase();
+        // Select the span specifically to keep the Flexbox parent intact
+        const startSpan = yearStartLabel.querySelector('span');
+        const endSpan = yearEndLabel.querySelector('span');
+        const termSpan = termLabel.querySelector('span');
+
+        if (startSpan) startSpan.innerText = yearStartInput.value || "2025";
+        if (endSpan) endSpan.innerText = yearEndInput.value || "2026";
+        if (termSpan) termSpan.innerText = (termInput.value || "TERM 1").toUpperCase();
+
         saveToLocal();
     };
 

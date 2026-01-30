@@ -277,7 +277,10 @@ button {
 .term-box {
     display: flex !important;
     align-items: center !important;
+    /* Vertical centering */
     justify-content: center !important;
+    /* Horizontal centering */
+    text-align: center;
     color: var(--header-text) !important;
     font-weight: 900;
     border-radius: 10px;
@@ -285,14 +288,15 @@ button {
     padding: 0 !important;
     margin: 0 !important;
     box-sizing: border-box;
-    /* Remove line-height: 54px; */
+    line-height: 1 !important;
+    /* Forces the browser to stop using line-height for positioning */
 }
 
 .year-box span,
 .term-box span {
-    display: inline-block;
-    line-height: inherit;
-    vertical-align: middle;
+    display: block;
+    margin: 0;
+    padding: 0;
 }
 
 .year-box:hover,
@@ -381,8 +385,7 @@ button {
     align-items: center !important;
     justify-content: center !important;
     height: 54px !important;
-    line-height: normal !important;
-    /* Reset line-height */
+    line-height: 1 !important;
 }
 
 #wallpaper-container.is-exporting .year-box span,
