@@ -288,10 +288,6 @@ button {
     border-radius: 10px;
     height: 54px;
     /* Explicit height ensures the 'middle' is consistent */
-
-    /* REMOVE line-height and padding - these push the text to the top */
-    line-height: normal !important;
-    padding: 0 !important;
     margin: 0 !important;
 }
 
