@@ -277,17 +277,19 @@ button {
 
 .year-box,
 .term-box {
-    /* Use ONLY flex for centering - remove table-cell references */
+    /* Use flex centering: the most stable method for iPhone PWA mode */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+
     text-align: center;
     color: white;
     font-weight: 900;
     border-radius: 10px;
     height: 54px;
+    /* Explicit height ensures the 'middle' is consistent */
 
-    /* Ensure no line-height or padding is pushing text up */
+    /* REMOVE line-height and padding - these push the text to the top */
     line-height: normal !important;
     padding: 0 !important;
     margin: 0 !important;
