@@ -177,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             cell.addEventListener('dragover', (e) => {
                 e.preventDefault();
+                // Use clientX/Y to find the element even if the touch isn't perfectly centered
                 const touch = e.touches ? e.touches[0] : e;
                 const target = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.grid-cell');
 
@@ -191,21 +192,26 @@ document.addEventListener('DOMContentLoaded', () => {
             cell.addEventListener('drop', (e) => {
                 e.preventDefault();
                 const draggingElem = document.querySelector('.dragging');
-                const sourceIndex = draggingElem ? draggingElem.id.replace('cell-', '') : null;
+                if (!draggingElem) return;
 
+                const sourceIndex = draggingElem.id.replace('cell-', '');
+
+                // IMPROVED DETECTION: Find the target based on the final drop coordinates
                 const touch = e.changedTouches ? e.changedTouches[0] : e;
                 const targetCell = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.grid-cell');
 
-                if (sourceIndex !== null && targetCell && targetCell.id !== `cell-${sourceIndex}` && !targetCell.classList.contains('day-label')) {
-                    debugBox.innerText = `SUCCESS: Swapped ${sourceIndex} with ${targetCell.id}`;
+                if (targetCell && targetCell.id !== `cell-${sourceIndex}` && !targetCell.classList.contains('day-label')) {
                     const sourceCell = document.getElementById(`cell-${sourceIndex}`);
 
+                    // Extract content while preserving the drag-handle
                     const targetContent = targetCell.querySelector('.content-box')?.outerHTML || targetCell.querySelector('.star-icon')?.outerHTML || '';
                     const sourceContent = sourceCell.querySelector('.content-box')?.outerHTML || sourceCell.querySelector('.star-icon')?.outerHTML || '';
 
                     const handleHTML = `<div class="drag-handle"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
                     targetCell.innerHTML = handleHTML + sourceContent;
                     sourceCell.innerHTML = handleHTML + targetContent;
+
+                    debugBox.innerText = `SUCCESS: Swapped ${sourceIndex} with ${targetCell.id}`;
                     saveToLocal();
                 } else {
                     debugBox.innerText = `DROP FAILED: Invalid target`;

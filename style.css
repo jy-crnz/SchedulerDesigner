@@ -124,15 +124,16 @@ select {
     font-size: 16px;
     /* FIX: Prevents iOS from zooming in on focus */
     transition: 0.3s ease;
-    outline: none;
+    outline: none !important;
     /* Removes the "weird" blue outline */
     -webkit-tap-highlight-color: transparent;
     /* Removes the grey tap box on mobile */
+    border: 1px solid var(--glass-border);
 }
 
 input:focus {
     border-color: var(--accent-cyan);
-    box-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
+    box-shadow: 0 0 8px rgba(0, 243, 255, 0.4);
     background: rgba(0, 0, 0, 0.5);
 }
 
@@ -258,16 +259,14 @@ button {
 .wp-header {
     display: flex !important;
     flex-direction: row !important;
-    justify-content: center;
-    /* Keeps all three boxes grouped in the center */
+    justify-content: center !important;
+    /* Forces items to stay in the middle */
     align-items: center;
-    margin-bottom: 15px;
-    gap: 10px;
-    /* Space between boxes */
+    margin-bottom: 20px;
+    gap: 8px;
     height: 60px;
     width: 100%;
-    padding: 0 10px;
-    /* Slight horizontal padding for safety */
+    box-sizing: border-box;
 }
 
 .year-box,
@@ -294,18 +293,33 @@ button {
 
 .year-box {
     background: var(--primary);
-    width: 85px;
-    /* Fixed width for years to keep them consistent */
+    width: 80px;
+    /* Fixed width for export stability */
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: white;
     flex-shrink: 0;
 }
 
 .term-box {
     background: var(--secondary);
-    flex-grow: 1;
-    /* Let the term box take up the middle space */
-    min-width: 120px;
+    width: 140px;
+    /* Fixed width prevents the text from hugging the edges */
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: white;
     letter-spacing: 1px;
-    /* Adds breathing room to "TERM 2" */
+    text-transform: uppercase;
 }
 
 /* 8. GRID & INTERACTIVE ELEMENTS */
@@ -396,10 +410,12 @@ button {
 }
 
 .grid-cell.drag-over {
-    background: rgba(0, 243, 255, 0.2) !important;
+    background: rgba(0, 243, 255, 0.3) !important;
     border: 2px solid var(--accent-cyan) !important;
-    outline: 2px dashed var(--accent-cyan);
-    z-index: 5;
+    transform: scale(1.05);
+    /* Makes the target "pop" slightly */
+    transition: transform 0.1s ease;
+    z-index: 10;
 }
 
 /* 11. MODALS */
