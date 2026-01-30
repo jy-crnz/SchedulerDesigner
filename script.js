@@ -371,20 +371,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Update this section in your script.js
     downloadBtn.onclick = () => {
         wpContainer.classList.add('is-exporting');
 
-        // Increased delay for high-res mobile rendering
         setTimeout(() => {
             html2canvas(wpContainer, {
-                scale: 3, // Keep scale at 3 for sharpness
+                scale: 3,
                 useCORS: true,
                 logging: false,
-                backgroundColor: "#ffffff",
+                backgroundColor: null, // Transparent to let CSS backgrounds shine
                 scrollX: 0,
                 scrollY: 0,
-                windowWidth: wpContainer.offsetWidth,
-                windowHeight: wpContainer.offsetHeight
+                width: 360,  // Match the container's fixed width
+                height: 740, // Match the container's fixed height
             }).then(canvas => {
                 wpContainer.classList.remove('is-exporting');
                 const link = document.createElement('a');

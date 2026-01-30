@@ -277,18 +277,11 @@ button {
 .term-box {
     display: flex !important;
     align-items: center !important;
-    /* Vertical center */
     justify-content: center !important;
-    /* Horizontal center */
     height: 54px;
     border-radius: 10px;
     font-weight: 900;
     color: var(--header-text) !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box;
-    /* REMOVE line-height entirely */
-    line-height: normal !important;
 }
 
 .year-box span,
@@ -381,11 +374,11 @@ button {
 /* Adjustments applied ONLY during html2canvas capture */
 #wallpaper-container.is-exporting .year-box,
 #wallpaper-container.is-exporting .term-box {
-    display: grid !important;
-    /* Switch to grid for export */
-    place-items: center !important;
-    /* Perfect centering */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     height: 54px !important;
+    /* Ensure no internal padding shifts the text */
     padding: 0 !important;
     margin: 0 !important;
 }
@@ -393,10 +386,11 @@ button {
 #wallpaper-container.is-exporting .year-box span,
 #wallpaper-container.is-exporting .term-box span {
     display: block !important;
+    /* Forces the text box to be exactly the height of the container */
     line-height: 54px !important;
-    /* Force line-height to match container height */
     height: 54px !important;
-    text-align: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 #wallpaper-container.is-exporting .term-box {
@@ -421,9 +415,9 @@ button {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    margin-bottom: 30px !important;
+    margin-bottom: 25px !important;
+    /* Matches preview spacing */
     gap: 8px !important;
-    /* Ensure gap is preserved */
 }
 
 #wallpaper-container:not(.is-exporting) .grid-cell:has(.content-box) .drag-handle,
