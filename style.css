@@ -18,6 +18,8 @@
     --secondary: #d32f2f;
     --bg: #ffffff;
     --grid-line: #1a237e;
+    --header-text: #ffffff;
+        /* Default is white */
 }
 
 /* Theme Variants */
@@ -26,6 +28,7 @@
     --secondary: #f48fb1;
     --bg: #121212;
     --grid-line: #333;
+    --header-text: #121212;
 }
 
 .theme-neon {
@@ -33,6 +36,7 @@
     --secondary: #ff00ff;
     --bg: #000;
     --grid-line: #00f3ff;
+    --header-text: #000000;
 }
 
 body {
@@ -277,7 +281,7 @@ button {
     justify-content: center !important;
 
     text-align: center;
-    color: white;
+    color: var(--header-text) !important;
     font-weight: 900;
     border-radius: 10px;
     height: 54px;
@@ -350,7 +354,7 @@ button {
     background: var(--grid-line) !important;
     color: var(--bg) !important;
     font-weight: 900;
-    font-size: 11px;
+    font-size: 11px;    
     cursor: default;
 }
 
@@ -413,6 +417,12 @@ button {
 #wallpaper-container:not(.is-exporting) .grid-cell:has(.content-box) .drag-handle,
 #wallpaper-container:not(.is-exporting) .grid-cell:has(.star-icon) .drag-handle {
     display: flex !important;
+}
+
+#wallpaper-container.is-exporting .year-box,
+#wallpaper-container.is-exporting .term-box,
+#wallpaper-container.is-exporting .day-label {
+    color: var(--bg) !important;
 }
 
 .is-exporting .drag-handle {
