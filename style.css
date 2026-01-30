@@ -400,7 +400,7 @@ button {
 #wallpaper-container.is-exporting .year-box {
     /* Increasing this value pushes the text further left */
     padding-right: 2px !important;
-
+    padding-bottom: 1px !important;
     /* Ensure flex centering remains the anchor */
     display: flex !important;
     justify-content: center !important;
