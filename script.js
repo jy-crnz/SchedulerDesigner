@@ -371,30 +371,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Update this section in your script.js
     downloadBtn.onclick = () => {
         wpContainer.classList.add('is-exporting');
 
+        // Small delay to ensure CSS classes are applied before capture
         setTimeout(() => {
             html2canvas(wpContainer, {
-                scale: 3,
+                scale: 3, // High resolution for sharp text
                 useCORS: true,
                 logging: false,
-                backgroundColor: null, // Transparent to let CSS backgrounds shine
-                scrollX: 0,
-                scrollY: 0,
-                width: 360,  // Match the container's fixed width
-                height: 740, // Match the container's fixed height
+                backgroundColor: null,
+                onclone: (clonedDoc) => {
+                    // Remove any scale transforms that might be active in the preview
+                    const clonedContainer = clonedDoc.getElementById('wallpaper-container');
+                    clonedContainer.style.transform = "none";
+                    clonedContainer.style.margin = "0 auto";
+                }
             }).then(canvas => {
                 wpContainer.classList.remove('is-exporting');
                 const link = document.createElement('a');
-                link.download = `MySchedule-${Date.now()}.png`;
+                link.download = `Schedule-${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
             });
-        }, 800);
+        }, 150);
     };
-    
+
     clearBtn.onclick = () => {
         if (confirm("Clear entire schedule?")) {
             document.querySelectorAll('.grid-cell:not(.day-label)').forEach(cell => {

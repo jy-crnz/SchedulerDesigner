@@ -275,21 +275,25 @@ button {
 
 .year-box,
 .term-box {
+    /* Use ONLY flexbox for the most reliable mobile centering */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    height: 54px;
-    border-radius: 10px;
-    font-weight: 900;
-    color: var(--header-text) !important;
-}
 
-.year-box span,
-.term-box span {
-    display: block !important;
-    margin: 0 !important;
+    text-align: center;
+    color: var(--header-text) !important;
+    font-weight: 900;
+    border-radius: 10px;
+    height: 54px;
+    /* Explicit height is mandatory for flex-centering */
+
+    /* RESET: These are the culprits for off-center text */
+    line-height: normal !important;
     padding: 0 !important;
-    line-height: 1 !important;
+    margin: 0 !important;
+
+    /* Prevents font from drifting on high-res displays */
+    -webkit-font-smoothing: antialiased;
 }
 
 .year-box:hover,
@@ -377,47 +381,37 @@ button {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    height: 54px !important;
-    /* Ensure no internal padding shifts the text */
-    padding: 0 !important;
-    margin: 0 !important;
-}
 
-#wallpaper-container.is-exporting .year-box span,
-#wallpaper-container.is-exporting .term-box span {
-    display: block !important;
-    /* Forces the text box to be exactly the height of the container */
-    line-height: 54px !important;
-    height: 54px !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
+    /* This is the magic nudge: 
+       Increasing padding-bottom pushes the text UP.
+       Try 4px, 6px, or 8px to match your preview. */
+    padding-bottom: 4px !important;
+    padding-top: 0 !important;
 
-#wallpaper-container.is-exporting .term-box {
-    width: 150px !important;
+    box-sizing: border-box;
 }
 
 #wallpaper-container.is-exporting .year-box {
-    width: 85px !important;
+    /* Increasing this value pushes the text further left */
+    padding-right: 2px !important;
+
+    /* Ensure flex centering remains the anchor */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    box-sizing: border-box;
 }
 
 /* Ensure consistent spacing from the top notch */
 #wallpaper-container.is-exporting {
-    background-color: var(--bg) !important;
-    /* Forces the black/white theme bg */
-    transform: scale(1) !important;
-    border-radius: 30px !important;
-    padding: 50px 20px !important;
-    box-sizing: border-box !important;
+    padding-top: 60px !important;
 }
 
 #wallpaper-container.is-exporting .wp-header {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    margin-bottom: 25px !important;
-    /* Matches preview spacing */
-    gap: 8px !important;
+    margin-bottom: 30px !important;
 }
 
 #wallpaper-container:not(.is-exporting) .grid-cell:has(.content-box) .drag-handle,
@@ -645,6 +639,54 @@ button {
 
 .dnd-poly-drag-image {
     pointer-events: none !important;
+}
+
+#modalMove {
+    background: rgba(0, 243, 255, 0.1);
+    color: var(--accent-cyan);
+    border: 1px solid var(--accent-cyan);
+    padding: 12px;
+    width: 100%;
+    margin-top: 5px;
+    font-weight: 700;
+    border-radius: 12px;
+    text-transform: uppercase;
+}
+
+.btn-action-cyan {
+    flex: 1;
+    background: rgba(0, 243, 255, 0.1);
+    color: var(--accent-cyan);
+    border: 1px solid var(--accent-cyan);
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.btn-action-cyan:hover {
+    background: rgba(0, 243, 255, 0.2);
+}
+
+.btn-action-red {
+    flex: 1;
+    background: rgba(211, 47, 47, 0.1);
+    color: #ff8a80;
+    border: 1px solid #ff8a80;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 11px;
+    /* Slightly smaller to fit 3 buttons */
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-action-red:hover {
+    background: rgba(211, 47, 47, 0.2);
 }
 
 #modalMove {
