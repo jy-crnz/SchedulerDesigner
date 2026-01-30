@@ -382,7 +382,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 logging: false,
                 backgroundColor: "#ffffff",
                 scrollX: 0,
-                scrollY: -window.scrollY
+                scrollY: 0,
+                windowWidth: wpContainer.offsetWidth,
+                windowHeight: wpContainer.offsetHeight
             }).then(canvas => {
                 wpContainer.classList.remove('is-exporting');
                 const link = document.createElement('a');
