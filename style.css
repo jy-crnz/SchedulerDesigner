@@ -278,19 +278,28 @@ button {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    text-align: center;
     color: var(--header-text) !important;
     font-weight: 900;
     border-radius: 12px;
     height: 54px;
-    
-    /* Reset line-height to 1 to prevent text from being pushed down */
-    line-height: 1 !important; 
+
+    /* CRITICAL FIX: Reset line-height to 1 to stop text from drifting down */
+    line-height: 1 !important;
     padding: 0 !important;
     margin: 0 !important;
+
+    /* Matches the spacing in your reference */
+    letter-spacing: 1px;
     text-transform: uppercase;
-    
-    /* Matches the airy look of the second pic */
-    letter-spacing: 1px; 
+    -webkit-font-smoothing: antialiased;
+}
+
+.year-box span,
+.term-box span {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
 }
 
 .year-box:hover,
@@ -379,11 +388,10 @@ button {
     align-items: center !important;
     justify-content: center !important;
 
-    /* Force line-height to 1 to prevent text from being pushed down by font metrics */
-    line-height: 1 !important;
-    padding: 0 !important;
+    /* This 'nudge' compensates for the bold font baseline on export */
+    padding-top: 0 !important;
+    padding-bottom: 4px !important;
 
-    /* Ensure no shifts occur during high-scale render */
     box-sizing: border-box !important;
 }
 
@@ -415,6 +423,7 @@ button {
     justify-content: center !important;
     align-items: center !important;
     margin-bottom: 30px !important;
+    gap: 10px !important;
 }
 
 #wallpaper-container:not(.is-exporting) .grid-cell:has(.content-box) .drag-handle,
