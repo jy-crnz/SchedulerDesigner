@@ -271,20 +271,25 @@ button {
 
 .year-box,
 .term-box {
-    /* Use ONLY flex centering - REMOVE any table-cell references */
+    /* Use ONLY flexbox for the most reliable mobile centering */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+
     text-align: center;
     color: white;
     font-weight: 900;
     border-radius: 10px;
     height: 54px;
+    /* Explicit height is mandatory for flex-centering */
 
-    /* RESET: Essential to prevent text from drifting up */
+    /* RESET: These are the culprits for off-center text */
     line-height: normal !important;
     padding: 0 !important;
     margin: 0 !important;
+
+    /* Prevents font from drifting on high-res displays */
+    -webkit-font-smoothing: antialiased;
 }
 
 .year-box:hover,
