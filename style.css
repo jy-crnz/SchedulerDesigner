@@ -376,7 +376,6 @@ button {
 #wallpaper-container.is-exporting .term-box {
     /* If text is still too high after removing table-cell, 
        add 2-4px of padding-top here to nudge it down. */
-    padding-top: 2px !important;
     box-sizing: border-box;
 }
 
