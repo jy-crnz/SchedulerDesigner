@@ -366,18 +366,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     downloadBtn.onclick = () => {
-        // 1. Enter export mode
+        // 1. Enter export mode to apply the CSS fixes
         wpContainer.classList.add('is-exporting');
 
-        // 2. INCREASED DELAY: Give the browser 250ms to apply CSS centering
+        // 2. INCREASED DELAY: Ensures mobile browsers apply styles before capture
         setTimeout(() => {
             html2canvas(wpContainer, {
                 scale: 3, // High resolution for mobile retina displays
                 useCORS: true,
                 logging: false,
-                backgroundColor: null,
+                backgroundColor: null, // Prevents white background issues
                 scrollX: 0,
-                scrollY: -window.scrollY // Fixes alignment if you scrolled down
+                scrollY: -window.scrollY // Corrects alignment if the preview area is scrolled
             }).then(canvas => {
                 // 3. Exit export mode
                 wpContainer.classList.remove('is-exporting');
@@ -388,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
             });
-        }, 250); // Increased from 100ms for better reliability
+        }, 300); // 300ms is safer for mobile performance than 100ms
     };
 
     clearBtn.onclick = () => {

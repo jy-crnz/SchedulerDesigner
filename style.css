@@ -381,7 +381,7 @@ button {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    /* Pushes text UP to center it */
+    /* Pushes text UP to counteract canvas drift */
     padding-top: 0 !important;
     line-height: 1 !important;
     box-sizing: border-box !important;
@@ -398,14 +398,16 @@ button {
 
 #wallpaper-container.is-exporting .year-box {
     width: 85px !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
 }
 
 /* Ensure consistent spacing from the top notch */
 #wallpaper-container.is-exporting {
+    background: var(--bg) !important;
+    /* Forces current theme background */
     transform: scale(1) !important;
     border-radius: 30px !important;
+    padding: 50px 20px !important;
+    box-sizing: border-box !important;
 }
 
 #wallpaper-container.is-exporting .wp-header {
