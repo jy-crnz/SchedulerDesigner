@@ -254,9 +254,7 @@ button {
     flex-shrink: 0;
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
     box-sizing: border-box;
-    /* Ensures padding stays inside 360px */
     margin: 0 auto;
-    /* Centers the preview on PC */
 }
 
 .wp-header {
@@ -264,7 +262,8 @@ button {
     flex-direction: row !important;
     justify-content: center !important;
     align-items: center !important;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    /* Added breathing room */
     gap: 8px;
     height: 60px;
     width: 100%;
@@ -272,19 +271,20 @@ button {
 
 .year-box,
 .term-box {
-    /* Standardized flex centering: most reliable across modern browsers */
+    /* Use ONLY flex centering - REMOVE any table-cell references */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     text-align: center;
     color: white;
     font-weight: 900;
-    border-radius: 8px;
-    height: 50px;
-    padding: 0 5px !important;
-    margin: 0;
-    overflow: hidden;
-    white-space: nowrap;
+    border-radius: 10px;
+    height: 54px;
+
+    /* RESET: Essential to prevent text from drifting up */
+    line-height: normal !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 .year-box:hover,
@@ -377,8 +377,9 @@ button {
 /* Adjustments applied ONLY during html2canvas capture */
 #wallpaper-container.is-exporting .year-box,
 #wallpaper-container.is-exporting .term-box {
-    /* Pushes text UP specifically in the download */
-    padding-bottom: 6px !important;
+    /* If text is still too high after removing table-cell, 
+       add 2-4px of padding-top here to nudge it down. */
+    padding-top: 2px !important;
     box-sizing: border-box;
 }
 
