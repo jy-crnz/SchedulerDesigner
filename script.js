@@ -158,6 +158,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(debugBox);
         }
 
+        // NEW: Memory variable to store the last valid cell we hovered over
+        let lastHoveredCell = null;
+
         for (let i = 0; i < 25; i++) {
             const cell = document.createElement('div');
             cell.className = 'grid-cell';
@@ -170,11 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
             cell.appendChild(handle);
 
             cell.addEventListener('dragstart', (e) => {
-                // Haptic feedback for mobile users to know the drag started
                 if (navigator.vibrate) navigator.vibrate(50);
-
                 e.dataTransfer.setData('text/plain', i);
                 cell.classList.add('dragging');
+                lastHoveredCell = null; // Reset memory
                 debugBox.innerText = `START: Dragging Cell ${i}`;
             });
 
@@ -182,7 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 const touch = e.touches ? e.touches[0] : e;
 
-                // Temporary "ghosting" to find the target under the finger
                 const draggingElem = document.querySelector('.dragging');
                 if (draggingElem) draggingElem.style.pointerEvents = 'none';
 
@@ -194,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (target && !target.classList.contains('day-label')) {
                     target.classList.add('drag-over');
+                    lastHoveredCell = target; // Update memory with the current valid target
                     if (debugBox) debugBox.innerText = `HOVERING: ${target.id}`;
                 }
             });
@@ -206,10 +208,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const sourceIndex = draggingElem.id.replace('cell-', '');
                 const touch = e.changedTouches ? e.changedTouches[0] : e;
 
-                // CRITICAL FIX: Disable pointer events so elementFromPoint sees the cell BELOW the finger
+                // 1. Try to find target via current coordinates
                 draggingElem.style.pointerEvents = 'none';
-                const targetCell = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.grid-cell');
+                let targetCell = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.grid-cell');
                 draggingElem.style.pointerEvents = 'all';
+
+                // 2. FALLBACK: If targetCell is null (common on long-hold drops), use the last valid hovered cell
+                if (!targetCell || targetCell.classList.contains('day-label')) {
+                    targetCell = lastHoveredCell;
+                }
 
                 if (targetCell && targetCell.id !== `cell-${sourceIndex}` && !targetCell.classList.contains('day-label')) {
                     const sourceCell = document.getElementById(`cell-${sourceIndex}`);
@@ -224,17 +231,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     debugBox.innerText = `SUCCESS: Swapped ${sourceIndex} with ${targetCell.id}`;
                     saveToLocal();
                 } else {
-                    debugBox.innerText = `DROP FAILED: Invalid target`;
+                    debugBox.innerText = `DROP FAILED: No target found`;
                 }
 
                 document.querySelectorAll('.grid-cell').forEach(c => c.classList.remove('drag-over', 'dragging'));
+                lastHoveredCell = null; // Clear memory
             });
 
             cell.addEventListener('dragend', () => {
-                cell.classList.remove('dragging');
-                // Ensure pointer events are reset even if drop fails
-                cell.style.pointerEvents = 'all';
-                setTimeout(() => { debugBox.innerText = "WAITING FOR DRAG..."; }, 2000);
+                cell.classList.add('mobile-pulse'); // Add visual feedback that drag finished
+                setTimeout(() => {
+                    cell.classList.remove('dragging', 'mobile-pulse');
+                    cell.style.pointerEvents = 'all';
+                    debugBox.innerText = "WAITING FOR DRAG...";
+                }, 300);
             });
 
             cell.addEventListener('click', (e) => {
