@@ -284,7 +284,7 @@ button {
     /* Keep the box height the same */
 
     /* CHANGE THIS: Lowering this value moves text UP */
-    line-height: 51px;
+    line-height: 54px;
 
     padding: 0 !important;
     margin: 0 !important;
@@ -383,7 +383,7 @@ button {
    
     display: block !important;
     /* Switch from flex to block during capture */
-    line-height: 51px !important;
+    line-height: 54px !important;
 
     /* Matches height exactly to force vertical center */
 }
