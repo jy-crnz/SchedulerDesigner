@@ -366,24 +366,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     downloadBtn.onclick = () => {
+        // 1. Enter export mode
         wpContainer.classList.add('is-exporting');
 
-        // Give the browser 100ms to apply the .is-exporting styles
+        // 2. INCREASED DELAY: Give the browser 250ms to apply CSS centering
         setTimeout(() => {
             html2canvas(wpContainer, {
-                scale: 3,
+                scale: 3, // High resolution for mobile retina displays
                 useCORS: true,
                 logging: false,
-                y: 0,
-                scrollY: 0
+                backgroundColor: null,
+                scrollX: 0,
+                scrollY: -window.scrollY // Fixes alignment if you scrolled down
             }).then(canvas => {
+                // 3. Exit export mode
                 wpContainer.classList.remove('is-exporting');
+
+                // 4. Trigger download
                 const link = document.createElement('a');
-                link.download = `my-schedule-${Date.now()}.png`;
-                link.href = canvas.toDataURL('image/png');
+                link.download = `Schedule-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
             });
-        }, 100);
+        }, 250); // Increased from 100ms for better reliability
     };
 
     clearBtn.onclick = () => {
