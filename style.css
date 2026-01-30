@@ -260,28 +260,29 @@ button {
     display: flex !important;
     flex-direction: row !important;
     justify-content: center !important;
-    /* Forces items to stay in the middle */
     align-items: center;
     margin-bottom: 20px;
     gap: 8px;
     height: 60px;
     width: 100%;
+    /* Use padding to ensure the container doesn't hug the edges */
+    padding: 0 10px;
     box-sizing: border-box;
 }
 
 .year-box,
 .term-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /* REMOVE display: flex and use block centering for export stability */
+    display: block !important;
+    text-align: center;
     color: white;
     font-weight: 900;
     font-size: 1.2rem;
-    /* Slightly larger for clarity */
-    border-radius: 8px;
-    padding: 0 10px !important;
-    height: 100%;
-    /* Ensure they fill the header height */
+    border-radius: 10px;
+    height: 50px;
+    /* This line is the magic fix for off-center text in downloads */
+    line-height: 50px;
+    overflow: hidden;
     white-space: nowrap;
 }
 
@@ -293,7 +294,7 @@ button {
 
 .year-box {
     background: var(--primary);
-    width: 80px;
+    width: 85px;
     /* Fixed width for export stability */
     height: 50px;
     display: flex;
@@ -308,7 +309,7 @@ button {
 
 .term-box {
     background: var(--secondary);
-    width: 140px;
+    width: 145px;
     /* Fixed width prevents the text from hugging the edges */
     height: 50px;
     display: flex;

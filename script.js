@@ -315,12 +315,14 @@ document.addEventListener('DOMContentLoaded', () => {
         wpContainer.classList.add('is-exporting');
 
         html2canvas(wpContainer, {
-            scale: 3,
+            scale: 3, // Keep high res
             useCORS: true,
-            logging: false
+            logging: false,
+            backgroundColor: null, // Ensures transparency doesn't cause artifacts
+            scrollX: 0,
+            scrollY: -window.scrollY // Fixes offset issues if the page is scrolled
         }).then(canvas => {
             wpContainer.classList.remove('is-exporting');
-
             const link = document.createElement('a');
             link.download = `my-schedule-${Date.now()}.png`;
             link.href = canvas.toDataURL('image/png');
