@@ -170,6 +170,9 @@ document.addEventListener('DOMContentLoaded', () => {
             cell.appendChild(handle);
 
             cell.addEventListener('dragstart', (e) => {
+                // Haptic feedback for mobile users to know the drag started
+                if (navigator.vibrate) navigator.vibrate(50);
+
                 e.dataTransfer.setData('text/plain', i);
                 cell.classList.add('dragging');
                 debugBox.innerText = `START: Dragging Cell ${i}`;
@@ -177,9 +180,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             cell.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                // Use clientX/Y to find the element even if the touch isn't perfectly centered
                 const touch = e.touches ? e.touches[0] : e;
+
+                // Temporary "ghosting" to find the target under the finger
+                const draggingElem = document.querySelector('.dragging');
+                if (draggingElem) draggingElem.style.pointerEvents = 'none';
+
                 const target = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.grid-cell');
+
+                if (draggingElem) draggingElem.style.pointerEvents = 'all';
 
                 document.querySelectorAll('.grid-cell').forEach(c => c.classList.remove('drag-over'));
 
@@ -195,15 +204,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!draggingElem) return;
 
                 const sourceIndex = draggingElem.id.replace('cell-', '');
-
-                // IMPROVED DETECTION: Find the target based on the final drop coordinates
                 const touch = e.changedTouches ? e.changedTouches[0] : e;
+
+                // CRITICAL FIX: Disable pointer events so elementFromPoint sees the cell BELOW the finger
+                draggingElem.style.pointerEvents = 'none';
                 const targetCell = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.grid-cell');
+                draggingElem.style.pointerEvents = 'all';
 
                 if (targetCell && targetCell.id !== `cell-${sourceIndex}` && !targetCell.classList.contains('day-label')) {
                     const sourceCell = document.getElementById(`cell-${sourceIndex}`);
 
-                    // Extract content while preserving the drag-handle
                     const targetContent = targetCell.querySelector('.content-box')?.outerHTML || targetCell.querySelector('.star-icon')?.outerHTML || '';
                     const sourceContent = sourceCell.querySelector('.content-box')?.outerHTML || sourceCell.querySelector('.star-icon')?.outerHTML || '';
 
@@ -222,6 +232,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             cell.addEventListener('dragend', () => {
                 cell.classList.remove('dragging');
+                // Ensure pointer events are reset even if drop fails
+                cell.style.pointerEvents = 'all';
                 setTimeout(() => { debugBox.innerText = "WAITING FOR DRAG..."; }, 2000);
             });
 

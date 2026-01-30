@@ -419,6 +419,10 @@ button {
     display: flex !important;
 }
 
+.drag-handle, .drag-handle span {
+    pointer-events: none !important;
+}
+
 #wallpaper-container.is-exporting .year-box,
 #wallpaper-container.is-exporting .term-box,
 #wallpaper-container.is-exporting .day-label {
