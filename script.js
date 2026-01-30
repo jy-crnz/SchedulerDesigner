@@ -366,29 +366,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     downloadBtn.onclick = () => {
-        // 1. Enter export mode
         wpContainer.classList.add('is-exporting');
 
-        // 2. DELAY: Give the mobile browser 400ms to re-render centered text
+        // Small delay to let the browser stabilize the text alignment
         setTimeout(() => {
             html2canvas(wpContainer, {
-                scale: 3,               // Keeps text and stars high-resolution
-                useCORS: true,          // Helps with font loading
+                scale: 3,
+                useCORS: true,
                 logging: false,
-                backgroundColor: null,   // Prevents the white background glitch
+                backgroundColor: "#ffffff", // Forces white background for the whole export
                 scrollX: 0,
-                scrollY: -window.scrollY // Fixes alignment if the page was scrolled
+                scrollY: -window.scrollY
             }).then(canvas => {
-                // 3. Exit export mode
                 wpContainer.classList.remove('is-exporting');
-
-                // 4. Trigger high-quality download
                 const link = document.createElement('a');
                 link.download = `MySchedule-${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
             });
-        }, 400); // Increased delay for stability
+        }, 500); // 500ms is the "sweet spot" for mobile renders
     };
     
     clearBtn.onclick = () => {

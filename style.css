@@ -275,25 +275,24 @@ button {
 
 .year-box,
 .term-box {
-    /* Use ONLY flexbox for the most reliable mobile centering */
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
+    /* Use block for more stable image rendering */
+    display: block !important;
     text-align: center;
     color: var(--header-text) !important;
     font-weight: 900;
-    border-radius: 10px;
     height: 54px;
-    /* Explicit height is mandatory for flex-centering */
-
-    /* RESET: These are the culprits for off-center text */
-    line-height: normal !important;
+    /* This line-height MUST match the height exactly */
+    line-height: 54px;
     padding: 0 !important;
     margin: 0 !important;
+    box-sizing: border-box;
+}
 
-    /* Prevents font from drifting on high-res displays */
-    -webkit-font-smoothing: antialiased;
+.year-box span,
+.term-box span {
+    display: inline-block;
+    line-height: inherit;
+    vertical-align: middle;
 }
 
 .year-box:hover,
@@ -378,12 +377,9 @@ button {
 /* Adjustments applied ONLY during html2canvas capture */
 #wallpaper-container.is-exporting .year-box,
 #wallpaper-container.is-exporting .term-box {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    line-height: 1 !important;
-    box-sizing: border-box !important;
+    line-height: 54px !important;
+    height: 54px !important;
+    display: block !important;
 }
 
 #wallpaper-container.is-exporting .term-box {
