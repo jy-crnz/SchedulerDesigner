@@ -387,6 +387,17 @@ button {
     box-sizing: border-box;
 }
 
+#wallpaper-container.is-exporting .year-box {
+    /* Increasing this value pushes the text further left */
+    padding-right: 4px !important;
+
+    /* Ensure flex centering remains the anchor */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    box-sizing: border-box;
+}
+
 /* Ensure consistent spacing from the top notch */
 #wallpaper-container.is-exporting {
     padding-top: 60px !important;
