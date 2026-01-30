@@ -382,13 +382,19 @@ button {
     align-items: center !important;
     justify-content: center !important;
 
-    /* This is the magic nudge: 
-       Increasing padding-bottom pushes the text UP.
-       Try 4px, 6px, or 8px to match your preview. */
-    padding-bottom: 4px !important;
-    padding-top: 0 !important;
+    /* Force line-height to 1 to prevent text from being pushed down by font metrics */
+    line-height: 1 !important;
+    padding: 0 !important;
 
-    box-sizing: border-box;
+    /* Ensure no shifts occur during high-scale render */
+    box-sizing: border-box !important;
+}
+
+#wallpaper-container.is-exporting .year-box span,
+#wallpaper-container.is-exporting .term-box span {
+    display: block !important;
+    margin: 0 auto !important;
+    /* This ensures the text itself is treated as a solid block within the flex parent */
 }
 
 #wallpaper-container.is-exporting .year-box {
