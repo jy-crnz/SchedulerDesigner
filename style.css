@@ -378,10 +378,11 @@ button {
     align-items: center !important;
     justify-content: center !important;
 
-    /* Adjust this value to nudge the text DOWN */
-    /* If it's too high, increase padding-top. If too low, increase padding-bottom */
-    padding-top: 4px !important;
-    padding-bottom: 2px !important;
+    /* This is the magic nudge: 
+       Increasing padding-bottom pushes the text UP.
+       Try 4px, 6px, or 8px to match your preview. */
+    padding-bottom: 6px !important;
+    padding-top: 0 !important;
 
     box-sizing: border-box;
 }
@@ -391,8 +392,10 @@ button {
     padding-top: 60px !important;
 }
 
-/* Keep the grid separated from headers in the PNG */
 #wallpaper-container.is-exporting .wp-header {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
     margin-bottom: 30px !important;
 }
 
