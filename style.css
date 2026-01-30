@@ -381,15 +381,9 @@ button {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    /* Pushes text UP to counteract canvas drift */
-    padding-top: 0 !important;
+
     line-height: 1 !important;
     box-sizing: border-box !important;
-}
-
-#wallpaper-container.is-exporting .drag-handle,
-#wallpaper-container.is-exporting .mobile-pulse {
-    display: none !important;
 }
 
 #wallpaper-container.is-exporting .term-box {
@@ -402,8 +396,8 @@ button {
 
 /* Ensure consistent spacing from the top notch */
 #wallpaper-container.is-exporting {
-    background: var(--bg) !important;
-    /* Forces current theme background */
+    background-color: var(--bg) !important;
+    /* Forces the black/white theme bg */
     transform: scale(1) !important;
     border-radius: 30px !important;
     padding: 50px 20px !important;

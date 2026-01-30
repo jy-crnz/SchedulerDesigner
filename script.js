@@ -366,31 +366,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     downloadBtn.onclick = () => {
-        // 1. Enter export mode to apply the CSS fixes
+        // 1. Enter export mode
         wpContainer.classList.add('is-exporting');
 
-        // 2. INCREASED DELAY: Ensures mobile browsers apply styles before capture
+        // 2. DELAY: Give the mobile browser 400ms to re-render centered text
         setTimeout(() => {
             html2canvas(wpContainer, {
-                scale: 3, // High resolution for mobile retina displays
-                useCORS: true,
+                scale: 3,               // Keeps text and stars high-resolution
+                useCORS: true,          // Helps with font loading
                 logging: false,
-                backgroundColor: null, // Prevents white background issues
+                backgroundColor: null,   // Prevents the white background glitch
                 scrollX: 0,
-                scrollY: -window.scrollY // Corrects alignment if the preview area is scrolled
+                scrollY: -window.scrollY // Fixes alignment if the page was scrolled
             }).then(canvas => {
                 // 3. Exit export mode
                 wpContainer.classList.remove('is-exporting');
 
-                // 4. Trigger download
+                // 4. Trigger high-quality download
                 const link = document.createElement('a');
-                link.download = `Schedule-${Date.now()}.png`;
+                link.download = `MySchedule-${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
             });
-        }, 300); // 300ms is safer for mobile performance than 100ms
+        }, 400); // Increased delay for stability
     };
-
+    
     clearBtn.onclick = () => {
         if (confirm("Clear entire schedule?")) {
             document.querySelectorAll('.grid-cell:not(.day-label)').forEach(cell => {
