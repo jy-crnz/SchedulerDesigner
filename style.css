@@ -275,25 +275,22 @@ button {
 
 .year-box,
 .term-box {
-    /* Use ONLY flexbox for the most reliable mobile centering */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-
-    text-align: center;
     color: var(--header-text) !important;
     font-weight: 900;
-    border-radius: 10px;
+    border-radius: 12px;
     height: 54px;
-    /* Explicit height is mandatory for flex-centering */
-
-    /* RESET: These are the culprits for off-center text */
-    line-height: normal !important;
+    
+    /* Reset line-height to 1 to prevent text from being pushed down */
+    line-height: 1 !important; 
     padding: 0 !important;
     margin: 0 !important;
-
-    /* Prevents font from drifting on high-res displays */
-    -webkit-font-smoothing: antialiased;
+    text-transform: uppercase;
+    
+    /* Matches the airy look of the second pic */
+    letter-spacing: 1px; 
 }
 
 .year-box:hover,
@@ -316,7 +313,7 @@ button {
     flex-shrink: 0;
     font-size: 1.2rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 }
 
 /* 8. GRID & INTERACTIVE ELEMENTS */
