@@ -406,7 +406,7 @@ button {
             -webkit-font-smoothing: antialiased;
             padding-top: 0 !important;
                 /* Ensure no top spacing */
-            padding-bottom: 2px !important;
+            padding-bottom: 4px !important;
             box-sizing: border-box !important;
 }
 
