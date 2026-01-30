@@ -240,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * 4. SIDEBAR LOGIC (Live Updates)
      */
+    // Example for updating header in script.js
     const updateHeader = () => {
         yearStartLabel.innerText = yearStartInput.value || "2025";
         yearEndLabel.innerText = yearEndInput.value || "2026";
