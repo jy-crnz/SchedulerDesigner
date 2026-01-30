@@ -325,6 +325,8 @@ button {
     letter-spacing: 2px;
 }
 
+
+
 /* 8. GRID & INTERACTIVE ELEMENTS */
 .schedule-grid {
     display: grid;
@@ -384,52 +386,31 @@ button {
 /* Adjustments applied ONLY during html2canvas capture */
 #wallpaper-container.is-exporting .year-box,
 #wallpaper-container.is-exporting .term-box {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    /* 1. Reset line-height to prevent it from pushing text down */
-    line-height: 1 !important;
-
-    /* 2. The "Nudge": Remove top padding and add bottom padding 
-       This effectively pushes the text UP into the true center */
-    padding-top: 0 !important;
-    padding-bottom: 0px !important;
-
-    box-sizing: border-box !important;
+        display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center;
+            color: var(--header-text) !important;
+            font-weight: 900;
+            border-radius: 12px;
+            height: 54px;
+        
+            /* CRITICAL FIX: Reset line-height to 1 to stop text from drifting down */
+            line-height: 1 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        
+            /* Matches the spacing in your reference */
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            -webkit-font-smoothing: antialiased;
 }
 
-#wallpaper-container.is-exporting .year-box span,
-#wallpaper-container.is-exporting .term-box span {
-    display: block !important;
-    transform: translateY(-1px);
-    /* Final micro-adjustment */
-}
 
-#wallpaper-container.is-exporting .year-box {
-    /* Increasing this value pushes the text further left */
-    padding-right: 0px !important;
-    padding-bottom: 0px !important;
-    /* Ensure flex centering remains the anchor */
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    box-sizing: border-box;
-}
 
-/* Ensure consistent spacing from the top notch */
-#wallpaper-container.is-exporting {
-    padding-top: 60px !important;
-}
 
-#wallpaper-container.is-exporting .wp-header {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    margin-bottom: 30px !important;
-    /* Ensure the gap matches your reference precisely */
-    gap: 12px !important;
-}
+
+
 
 #wallpaper-container:not(.is-exporting) .grid-cell:has(.content-box) .drag-handle,
 #wallpaper-container:not(.is-exporting) .grid-cell:has(.star-icon) .drag-handle {
