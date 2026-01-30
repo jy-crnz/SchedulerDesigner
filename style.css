@@ -404,6 +404,10 @@ button {
             letter-spacing: 2px;
             text-transform: uppercase;
             -webkit-font-smoothing: antialiased;
+            padding-top: 0 !important;
+                /* Ensure no top spacing */
+            padding-bottom: 2px !important;
+            box-sizing: border-box !important;
 }
 
 
