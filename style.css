@@ -6,8 +6,6 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    -webkit-text-size-adjust: 100%;
-    /* Prevents iOS font-drift */
 }
 
 :root {
@@ -259,9 +257,6 @@ button {
     /* Ensures padding stays inside 360px */
     margin: 0 auto;
     /* Centers the preview on PC */
-    padding: 20px;
-        /* Base padding */
-        transition: padding 0.1s;
 }
 
 .wp-header {
@@ -269,7 +264,7 @@ button {
     flex-direction: row !important;
     justify-content: center !important;
     align-items: center !important;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     gap: 8px;
     height: 60px;
     width: 100%;
@@ -277,24 +272,33 @@ button {
 
 .year-box,
 .term-box {
-    /* Use flex centering: the most stable method for iPhone PWA mode */
+    /* Standardized flex centering: most reliable across modern browsers */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-
     text-align: center;
     color: white;
     font-weight: 900;
-    border-radius: 10px;
-    height: 54px;
-    /* Explicit height ensures the 'middle' is consistent */
-    margin: 0 !important;
+    border-radius: 8px;
+    height: 50px;
+    padding: 0 5px !important;
+    margin: 0;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .year-box:hover,
 .term-box:hover {
     opacity: 0.8;
     transform: scale(1.02);
+}
+
+.year-box span,
+.term-box span {
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%;
+    height: 100%;
 }
 
 .year-box {
@@ -307,6 +311,7 @@ button {
 .term-box {
     background: var(--secondary);
     width: 150px;
+    /* Fixed width prevents squishing */
     flex-shrink: 0;
     font-size: 1.2rem;
     text-transform: uppercase;
@@ -369,13 +374,27 @@ button {
     touch-action: none !important;
 }
 
+/* Adjustments applied ONLY during html2canvas capture */
+#wallpaper-container.is-exporting .year-box,
+#wallpaper-container.is-exporting .term-box {
+    /* Pushes text UP specifically in the download */
+    padding-bottom: 6px !important;
+    box-sizing: border-box;
+}
+
+/* Ensure consistent spacing from the top notch */
+#wallpaper-container.is-exporting {
+    padding-top: 60px !important;
+}
+
+/* Keep the grid separated from headers in the PNG */
+#wallpaper-container.is-exporting .wp-header {
+    margin-bottom: 30px !important;
+}
+
 #wallpaper-container:not(.is-exporting) .grid-cell:has(.content-box) .drag-handle,
 #wallpaper-container:not(.is-exporting) .grid-cell:has(.star-icon) .drag-handle {
     display: flex !important;
-}
-
-#wallpaper-container.is-exporting {
-    padding-top: 60px !important;
 }
 
 .is-exporting .drag-handle {

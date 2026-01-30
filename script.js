@@ -315,20 +315,22 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadBtn.onclick = () => {
         wpContainer.classList.add('is-exporting');
 
-        html2canvas(wpContainer, {
-            scale: 3, // Keep high res
-            useCORS: true,
-            logging: false,
-            backgroundColor: null, // Ensures transparency doesn't cause artifacts
-            scrollX: 0,
-            scrollY: -window.scrollY // Fixes offset issues if the page is scrolled
-        }).then(canvas => {
-            wpContainer.classList.remove('is-exporting');
-            const link = document.createElement('a');
-            link.download = `my-schedule-${Date.now()}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        });
+        // Give the browser 100ms to apply the .is-exporting styles
+        setTimeout(() => {
+            html2canvas(wpContainer, {
+                scale: 3,
+                useCORS: true,
+                logging: false,
+                y: 0,
+                scrollY: 0
+            }).then(canvas => {
+                wpContainer.classList.remove('is-exporting');
+                const link = document.createElement('a');
+                link.download = `my-schedule-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }, 100);
     };
 
     clearBtn.onclick = () => {
