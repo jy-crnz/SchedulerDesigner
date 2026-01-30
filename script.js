@@ -315,9 +315,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateHeader = () => {
-        yearStartLabel.innerText = yearStartInput.value || "2025";
-        yearEndLabel.innerText = yearEndInput.value || "2026";
-        termLabel.innerText = termInput.value || "TERM 1";
+        // We target the span inside to keep the flex centering logic of the parent box
+        yearStartLabel.querySelector('span').innerText = yearStartInput.value || "2025";
+        yearEndLabel.querySelector('span').innerText = yearEndInput.value || "2026";
+        termLabel.querySelector('span').innerText = (termInput.value || "TERM 1").toUpperCase();
         saveToLocal();
     };
 
@@ -366,27 +367,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     downloadBtn.onclick = () => {
-        // 1. Enter export mode to trigger the 'is-exporting' CSS
         wpContainer.classList.add('is-exporting');
 
-        // 2. Small delay to let the mobile browser "lock" the text positions
+        // Increased delay for high-res mobile rendering
         setTimeout(() => {
             html2canvas(wpContainer, {
-                scale: 3,
+                scale: 3, // Keep scale at 3 for sharpness
                 useCORS: true,
                 logging: false,
-                backgroundColor: "#ffffff", // Matches the white "phone" look in your preview
+                backgroundColor: "#ffffff",
                 scrollX: 0,
                 scrollY: -window.scrollY
             }).then(canvas => {
                 wpContainer.classList.remove('is-exporting');
-
                 const link = document.createElement('a');
                 link.download = `MySchedule-${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
             });
-        }, 500);
+        }, 800);
     };
     
     clearBtn.onclick = () => {
