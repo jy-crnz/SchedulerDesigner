@@ -277,26 +277,26 @@ button {
 .term-box {
     display: flex !important;
     align-items: center !important;
-    /* Vertical centering */
+    /* Vertical center */
     justify-content: center !important;
-    /* Horizontal centering */
-    text-align: center;
-    color: var(--header-text) !important;
-    font-weight: 900;
-    border-radius: 10px;
+    /* Horizontal center */
     height: 54px;
+    border-radius: 10px;
+    font-weight: 900;
+    color: var(--header-text) !important;
     padding: 0 !important;
     margin: 0 !important;
     box-sizing: border-box;
-    line-height: 1 !important;
-    /* Forces the browser to stop using line-height for positioning */
+    /* REMOVE line-height entirely */
+    line-height: normal !important;
 }
 
 .year-box span,
 .term-box span {
-    display: block;
-    margin: 0;
-    padding: 0;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
 }
 
 .year-box:hover,
@@ -384,8 +384,9 @@ button {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    padding-top: 0 !important;
+    /* REMOVE the 8px padding that was shifting it */
     height: 54px !important;
-    line-height: 1 !important;
 }
 
 #wallpaper-container.is-exporting .year-box span,

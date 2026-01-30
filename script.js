@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateHeader = () => {
-        // Select the span specifically to keep the Flexbox parent intact
+        // Target the spans specifically to preserve the Flexbox structure
         const startSpan = yearStartLabel.querySelector('span');
         const endSpan = yearEndLabel.querySelector('span');
         const termSpan = termLabel.querySelector('span');
