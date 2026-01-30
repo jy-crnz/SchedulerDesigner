@@ -257,6 +257,9 @@ button {
     /* Ensures padding stays inside 360px */
     margin: 0 auto;
     /* Centers the preview on PC */
+    padding: 20px;
+        /* Base padding */
+        transition: padding 0.1s;
 }
 
 .wp-header {
@@ -264,7 +267,8 @@ button {
     flex-direction: row !important;
     justify-content: center !important;
     align-items: center !important;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    /* Increased bottom margin for better breathing room */
     gap: 8px;
     height: 60px;
     width: 100%;
@@ -377,6 +381,10 @@ button {
 #wallpaper-container:not(.is-exporting) .grid-cell:has(.content-box) .drag-handle,
 #wallpaper-container:not(.is-exporting) .grid-cell:has(.star-icon) .drag-handle {
     display: flex !important;
+}
+
+#wallpaper-container.is-exporting {
+    padding-top: 60px !important;
 }
 
 .is-exporting .drag-handle {
