@@ -388,9 +388,13 @@ button {
     align-items: center !important;
     justify-content: center !important;
 
-    /* This 'nudge' compensates for the bold font baseline on export */
+    /* 1. Reset line-height to prevent it from pushing text down */
+    line-height: 1 !important;
+
+    /* 2. The "Nudge": Remove top padding and add bottom padding 
+       This effectively pushes the text UP into the true center */
     padding-top: 0 !important;
-    padding-bottom: 4px !important;
+    padding-bottom: 0px !important;
 
     box-sizing: border-box !important;
 }
@@ -398,14 +402,14 @@ button {
 #wallpaper-container.is-exporting .year-box span,
 #wallpaper-container.is-exporting .term-box span {
     display: block !important;
-    margin: 0 auto !important;
-    /* This ensures the text itself is treated as a solid block within the flex parent */
+    transform: translateY(-1px);
+    /* Final micro-adjustment */
 }
 
 #wallpaper-container.is-exporting .year-box {
     /* Increasing this value pushes the text further left */
-    padding-right: 2px !important;
-    padding-bottom: 1px !important;
+    padding-right: 0px !important;
+    padding-bottom: 0px !important;
     /* Ensure flex centering remains the anchor */
     display: flex !important;
     justify-content: center !important;
@@ -423,7 +427,8 @@ button {
     justify-content: center !important;
     align-items: center !important;
     margin-bottom: 30px !important;
-    gap: 10px !important;
+    /* Ensure the gap matches your reference precisely */
+    gap: 12px !important;
 }
 
 #wallpaper-container:not(.is-exporting) .grid-cell:has(.content-box) .drag-handle,
