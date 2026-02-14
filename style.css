@@ -61,7 +61,9 @@ body {
 
 /* 3. SIDEBAR DESIGN (Glassmorphism) */
 .sidebar {
-    width: 330px;
+    width: 22rem;
+    max-width: 30vw;
+    min-width: 280px;
     background: var(--glass);
     backdrop-filter: blur(20px);
     border-right: 1px solid var(--glass-border);
@@ -248,8 +250,10 @@ button {
 
 #wallpaper-container {
     font-family: 'Inter', sans-serif;
-    width: 360px;
-    height: 740px;
+    width: 100%;
+    max-width: 360px;
+    aspect-ratio: 9 / 18.5;
+    height: auto;
     background: var(--bg);
     border-radius: 30px;
     padding: 50px 20px;
@@ -567,6 +571,13 @@ button {
     line-height: 1.4;
     letter-spacing: 0.5px;
     color: var(--secondary);
+}
+
+@media (max-width: 1100px) {
+    .sidebar {
+        width: 20rem;
+        padding: 20px;
+    }
 }
 
 /* 13. MOBILE RESPONSIVENESS - UPDATED VERSION */
