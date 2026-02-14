@@ -66,7 +66,7 @@ function getStrictCellIndex(day, timeRange, numCols) {
     return (rowIndex * numCols) + dayIndex;
 }
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.post('/api/scan-schedule', upload.single('scheduleImage'), async (req, res) => {
     try {
