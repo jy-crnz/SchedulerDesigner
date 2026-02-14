@@ -266,8 +266,7 @@ button {
     flex-direction: row !important;
     justify-content: center !important;
     align-items: center !important;
-    margin-bottom: 25px;
-    /* Added breathing room */
+    margin-bottom: 30px !important;
     gap: 8px;
     height: 60px;
     width: 100%;
@@ -276,25 +275,25 @@ button {
 .year-box,
 .term-box {
     display: grid !important;
-    /* Grid is more stable for html2canvas centering */
-    place-items: center;
-    /* Perfectly centers both horizontally and vertically */
-    text-align: center;
+    place-items: center !important;
+    /* Perfect 2D centering */
     color: var(--header-text) !important;
     font-weight: 900;
     border-radius: 12px;
     height: 54px;
-    /* FIX: Solidify line-height to prevent text from drifting down */
-    line-height: 54px !important;
+    line-height: 1 !important;
+    /* Resets baseline shift */
     padding: 0 !important;
     margin: 0 !important;
 }
 
 .year-box span,
 .term-box span {
-    display: block;
-    line-height: inherit;
-    /* Inherits the 54px height for perfect centering */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100%;
+    width: 100%;
 }
 
 .year-box:hover,
@@ -861,7 +860,6 @@ button {
     opacity: 1 !important;
     filter: none !important;
     transition: none !important;
-    animation: none !important;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -893,21 +891,25 @@ button {
 }
 
 /* 2. HEADER STABILITY: Stops "2025 / Term" from shifting up */
+/* Update this specific block around line 901 */
 #wallpaper-container.is-exporting .year-box,
 #wallpaper-container.is-exporting .term-box {
     display: grid !important;
     place-items: center !important;
-    height: 54px !important;
-    line-height: 54px !important;
     padding: 0 !important;
-    margin: 0 !important;
-    color: var(--bg) !important;
+
+    /* FIX: Added both standard and vendor-prefixed properties */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
 }
 
 #wallpaper-container.is-exporting .year-box span,
 #wallpaper-container.is-exporting .term-box span {
-    display: block !important;
-    line-height: 54px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    width: 100% !important;
 }
 
 /* 3. TEXT SHARPNESS: Fixes overlapping colons and cut-off letters */
