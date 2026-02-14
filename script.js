@@ -593,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
             formData.append('scheduleImage', file);
 
-            const response = await fetch('http://localhost:3000/api/scan-schedule', {
+            const response = await fetch('https://schedulerdesigner.onrender.com/api/scan-schedule', {
                 method: 'POST',
                 body: formData
             });

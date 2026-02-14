@@ -7,9 +7,9 @@ require('dotenv').config();
 const app = express();
 
 const allowedOrigins = [
-    'http://scheduler-designer-6q1w3t1xq-jy-crnzs-projects.vercel.app', // Your live TUP app URL
-    'http://localhost:5500',                    // Local VS Code Live Server
-    'http://127.0.0.1:5500'
+    'https://scheduler-designer.vercel.app',                             // Main Domain
+    'https://scheduler-designer-6dxxqd53w-jy-crnzs-projects.vercel.app', // Specific Deployment Link
+    'http://localhost:5500'                                              // Local testing
 ];
 
 app.use(cors({
