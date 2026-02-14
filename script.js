@@ -22,6 +22,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { passive: false });
     }
 
+    function generateAcronym(text) {
+        if (!text) return "";
+
+        // Split into words and only keep words starting with Uppercase (skips "in", "the", etc.)
+        const words = text.split(/\s+/).filter(word => {
+            const first = word.charAt(0);
+            // Keep Uppercase OR Numbers (for results like IPE4)
+            return (first >= 'A' && first <= 'Z') || (first >= '0' && first <= '9');
+        });
+
+        // If there is only one word (like "Business"), use the first 2 letters (e.g., "BI")
+        if (words.length === 1) {
+            return words[0].substring(0, 2).toUpperCase();
+        }
+
+        // Join the first letters of all valid words
+        return words.map(word => word.charAt(0)).join("").toUpperCase();
+    }
+
     // Standard DOM Selectors
     const grid = document.getElementById('grid');
     const wpContainer = document.getElementById('wallpaper-container');
@@ -57,11 +76,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const helpBtn = document.getElementById('helpBtn');
     const helpClose = document.getElementById('helpClose');
 
+    // Add this inside your DOMContentLoaded listener
+    const aiUpload = document.getElementById('aiUpload');
+    const scanBtn = document.getElementById('scanBtn');
+
+    scanBtn.onclick = () => aiUpload.click();
+
     // --- GLOBAL STATE MANAGEMENT VARIABLES ---
     let activeEditTarget = null;
     let selectedCellForMove = null;
     let isDuplicating = false;
     let lastHoveredCell = null;
+    let currentCols = 5; // Default to 5 (Mon-Fri)
+    let activeDaysStore = null; // Stores the current visible day indexes
 
     /**
      * 2. MODAL LOGIC (The "Edit Panel")
@@ -168,10 +195,34 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * 3. INITIALIZE GRID & DRAG-AND-DROP LOGIC
      */
-    function initGrid() {
-        grid.querySelectorAll('.grid-cell:not(.day-label)').forEach(cell => cell.remove());
-        let debugBox = document.getElementById('mobile-debug-status');
+    function initGrid(numCols = 5, activeDays = null) {
+        // 1. If no specific days are provided (startup), show all days up to numCols
+        if (!activeDays) {
+            activeDays = Array.from({ length: numCols }, (_, i) => i);
+        }
 
+        // 2. Update global state and CSS variable based on the trimmed count
+        currentCols = activeDays.length;
+        grid.style.setProperty('--cols', currentCols);
+
+        // 3. Clear the entire grid
+        grid.innerHTML = '';
+
+        const dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+
+        // 4. Re-create ONLY the active Day Headers
+        activeDays.forEach(dayIdx => {
+            const header = document.createElement('div');
+            header.className = 'grid-cell day-label';
+            header.innerText = dayNames[dayIdx];
+            grid.appendChild(header);
+        });
+
+        // 5. Create Data Cells for active days
+        const totalCells = 5 * currentCols;
+
+        // Standard Debug Box check
+        let debugBox = document.getElementById('mobile-debug-status');
         if (!debugBox) {
             debugBox = document.createElement('div');
             debugBox.id = 'mobile-debug-status';
@@ -179,10 +230,10 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(debugBox);
         }
 
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < totalCells; i++) {
             const cell = document.createElement('div');
             cell.className = 'grid-cell';
-            cell.id = `cell-${i}`;
+            cell.id = `cell-${i}`; // ID is relative to the current visible grid
             cell.draggable = true;
 
             const handle = document.createElement('div');
@@ -190,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let d = 0; d < 6; d++) handle.appendChild(document.createElement('span'));
             cell.appendChild(handle);
 
-            // DRAG EVENTS
+            // --- DRAG EVENTS ---
             cell.addEventListener('dragstart', (e) => {
                 safeVibrate(50);
                 e.dataTransfer.setData('text/plain', i);
@@ -203,8 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 const touch = e.touches ? e.touches[0] : e;
                 const draggingElem = document.querySelector('.dragging');
-
-                // CRITICAL FIX: Hide the dragged element temporarily so elementFromPoint sees the cell underneath
                 if (draggingElem) draggingElem.style.pointerEvents = 'none';
                 const target = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.grid-cell');
                 if (draggingElem) draggingElem.style.pointerEvents = 'all';
@@ -212,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.grid-cell').forEach(c => c.classList.remove('drag-over'));
                 if (target && !target.classList.contains('day-label')) {
                     target.classList.add('drag-over');
-                    lastHoveredCell = target; // Sticky memory for the drop location
+                    lastHoveredCell = target;
                 }
             });
 
@@ -220,7 +269,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 const draggingElem = document.querySelector('.dragging');
                 if (!draggingElem) return;
-
                 const touch = e.changedTouches ? e.changedTouches[0] : e;
                 draggingElem.style.pointerEvents = 'none';
                 let targetCell = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.grid-cell') || lastHoveredCell;
@@ -237,17 +285,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 cell.style.pointerEvents = 'all';
             });
 
-            // CLICK & TAP-TO-MOVE LOGIC
+            // --- CLICK & TAP-TO-MOVE LOGIC ---
             cell.addEventListener('click', (e) => {
                 if (selectedCellForMove) {
                     if (selectedCellForMove === cell) {
                         cell.classList.remove('mobile-pulse');
                         selectedCellForMove = null;
                     } else {
+                        const handleHTML = `<div class="drag-handle"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
                         if (isDuplicating) {
                             const sourceContent = selectedCellForMove.querySelector('.content-box')?.outerHTML ||
                                 selectedCellForMove.querySelector('.star-icon')?.outerHTML || '';
-                            const handleHTML = `<div class="drag-handle"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
                             cell.innerHTML = handleHTML + sourceContent;
                         } else {
                             swapCells(selectedCellForMove, cell);
@@ -259,12 +307,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     return;
                 }
-                // Only open modal if we didn't click the drag handle
                 if (!e.target.classList.contains('drag-handle')) openModal(cell, 'cell');
             });
 
             grid.appendChild(cell);
         }
+
+        if (typeof fillVacantStars === 'function') fillVacantStars();
     }
 
     /**
@@ -297,12 +346,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>`;
             }
         }
+
+        fillVacantStars(); // Add this
         saveToLocal();
         editModal.style.display = 'none';
     };
 
     modalClear.onclick = () => {
         activeEditTarget.innerHTML = `<div class="drag-handle"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
+        fillVacantStars(); // Add this
         saveToLocal();
         editModal.style.display = 'none';
     };
@@ -333,42 +385,169 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addBtn.onclick = () => {
         const sub = subInput.value.trim();
-        const row = parseInt(rowInput.value) - 1;
-        if (isNaN(row) || row < 0 || row > 4 || !sub) {
-            alert("Please provide a Subject and a valid Row (1-5).");
+        const row = parseInt(rowInput.value) - 1; // Converts 1-5 input to 0-4 index
+        const day = parseInt(dayInput.value);     // Mon=0, Tue=1, etc.
+
+        // Basic validation
+        if (isNaN(row) || row < 0 || row > 4 || isNaN(day) || !sub) {
+            alert("Please provide a Subject, valid Day, and Row (1-5).");
             return;
         }
-        const cellIndex = (row * 5) + parseInt(dayInput.value);
+
+        // --- STEP 1: DETECT IF DAY IS HIDDEN OR NEEDS EXPANSION ---
+
+        // Check if the day exists in our current visible grid
+        let colIndex = activeDaysStore ? activeDaysStore.indexOf(day) : day;
+
+        // A. If the day is hidden because of Auto-Trim
+        if (activeDaysStore && colIndex === -1) {
+            if (confirm("This day is currently hidden. Reveal all days to add this class?")) {
+                activeDaysStore = null; // Reset the trim
+                initGrid(day > 4 ? 7 : 5); // Rebuild full grid
+                colIndex = day; // Use standard index now that it's full
+            } else {
+                return;
+            }
+        }
+        // B. If adding a weekend to a standard 5-day grid
+        else if (!activeDaysStore && day > 4 && currentCols === 5) {
+            if (confirm("This is a weekend day. Expand your grid to 7 days?")) {
+                activeDaysStore = null;
+                initGrid(7);
+                colIndex = day;
+            } else {
+                return;
+            }
+        }
+
+        // --- STEP 2: DYNAMIC MATH FOR TRIMMED GRID ---
+        // Formula: (Row * Number of Visible Columns) + Relative Column Position
+        const cellIndex = (row * currentCols) + colIndex;
         const targetCell = document.getElementById(`cell-${cellIndex}`);
-        const handleHTML = `<div class="drag-handle"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
-        targetCell.innerHTML = handleHTML + `<div class="content-box"><p class="sub-txt">${sub.toUpperCase()}</p><p class="time-txt">${timeInput.value}</p><p class="room-txt">${roomInput.value.toUpperCase()}</p></div>`;
-        saveToLocal();
-        subInput.value = ''; timeInput.value = ''; roomInput.value = '';
+
+        if (targetCell) {
+            const shortSubject = generateAcronym(sub);
+            const displayTime = timeInput.value.replace(/AM|PM/gi, "");
+            const handleHTML = `<div class="drag-handle"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
+
+            targetCell.innerHTML = handleHTML + `
+        <div class="content-box">
+            <p class="sub-txt">${shortSubject}</p>
+            <p class="time-txt">${displayTime}</p>
+            <p class="room-txt">${roomInput.value.toUpperCase() || "TBA"}</p>
+        </div>`;
+
+            if (typeof fillVacantStars === 'function') fillVacantStars();
+            saveToLocal(); // Save current state, column count, and activeDaysStore
+
+            // Clear sidebar inputs
+            subInput.value = '';
+            timeInput.value = '';
+            roomInput.value = '';
+
+            safeVibrate(30); // Success feedback
+        }
     };
 
+
+    function fillVacantStars() {
+        const handleHTML = `<div class="drag-handle"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
+        const cells = document.querySelectorAll('.grid-cell:not(.day-label)');
+
+        cells.forEach(cell => {
+            // If the cell doesn't have a subject box, give it a star
+            if (!cell.querySelector('.content-box')) {
+                cell.innerHTML = handleHTML + `<span class="star-icon">★</span>`;
+            }
+        });
+    }
+
     function saveToLocal() {
-        const scheduleData = [];
-        document.querySelectorAll('.grid-cell:not(.day-label)').forEach(cell => scheduleData.push(cell.innerHTML));
-        localStorage.setItem('lab_schedule', JSON.stringify(scheduleData));
+        const scheduleData = {};
+
+        // 1. Map content to its ABSOLUTE ID (e.g., "cell-r0-d1")
+        // This prevents Tuesday classes from shifting to Monday when trimming
+        document.querySelectorAll('.grid-cell[id^="cell-"]').forEach(cell => {
+            scheduleData[cell.id] = cell.innerHTML;
+        });
+
+        // 2. Use a NEW storage key to avoid conflicts with old array data
+        localStorage.setItem('lab_schedule_final', JSON.stringify(scheduleData));
+
+        // 3. Save layout and header metadata
         localStorage.setItem('lab_header', JSON.stringify({
-            start: yearStartInput.value, end: yearEndInput.value, term: termInput.value, theme: wpContainer.className
+            start: yearStartInput.value,
+            end: yearEndInput.value,
+            term: termInput.value,
+            theme: wpContainer.className,
+            cols: currentCols,
+            activeDays: activeDaysStore // Remembers your trimmed view
         }));
     }
 
     function loadFromLocal() {
-        const savedSchedule = localStorage.getItem('lab_schedule');
         const savedHeader = localStorage.getItem('lab_header');
-        if (savedSchedule) {
-            const data = JSON.parse(savedSchedule);
-            const cells = document.querySelectorAll('.grid-cell:not(.day-label)');
-            data.forEach((content, i) => { if (cells[i]) cells[i].innerHTML = content; });
-        }
+        // Using the new final key to avoid conflicts with old array-based data
+        const savedSchedule = localStorage.getItem('lab_schedule_final');
+        const handleHTML = `<div class="drag-handle"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
+
+        // 1. REBUILD THE GRID STRUCTURE FIRST
         if (savedHeader) {
             const h = JSON.parse(savedHeader);
-            yearStartInput.value = h.start || ""; yearEndInput.value = h.end || ""; termInput.value = h.term || "";
+
+            // Restore the global activeDaysStore from memory
+            activeDaysStore = h.activeDays || null;
+
+            // Build the grid with correct columns and trimmed state
+            initGrid(h.cols || 5, activeDaysStore);
+
+            // Update Input fields
+            yearStartInput.value = h.start || "";
+            yearEndInput.value = h.end || "";
+            termInput.value = h.term || "";
             wpContainer.className = h.theme || "theme-classic";
-            updateHeader();
+
+            // CRITICAL: Update labels without triggering a "Save" race condition
+            updateHeaderLabelsOnly();
+        } else {
+            // Default to standard 5-day grid for new users
+            initGrid(5);
         }
+
+        // 2. FILL CELLS USING ABSOLUTE IDs
+        if (savedSchedule) {
+            const data = JSON.parse(savedSchedule); // This is now an Object { "cell-id": "HTML" }
+
+            // Iterate through the saved IDs and find their matching boxes
+            Object.keys(data).forEach(id => {
+                const cell = document.getElementById(id);
+                if (cell) {
+                    const content = data[id];
+                    // Ensure drag handle is present
+                    if (!content || content.trim() === "" || content === handleHTML) {
+                        cell.innerHTML = handleHTML;
+                    } else {
+                        cell.innerHTML = content;
+                    }
+                }
+            });
+        }
+
+        if (typeof fillVacantStars === 'function') fillVacantStars();
+    }
+
+    /**
+     * Helper to update the wallpaper text without triggering saveToLocal()
+     * This prevents the grid from being overwritten with an empty state on refresh
+     */
+    function updateHeaderLabelsOnly() {
+        const startSpan = yearStartLabel.querySelector('span');
+        const endSpan = yearEndLabel.querySelector('span');
+        const termSpan = termLabel.querySelector('span');
+
+        if (startSpan) startSpan.innerText = yearStartInput.value || "2025";
+        if (endSpan) endSpan.innerText = yearEndInput.value || "2026";
+        if (termSpan) termSpan.innerText = (termInput.value || "TERM 1").toUpperCase();
     }
 
     downloadBtn.onclick = () => {
@@ -397,12 +576,116 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 150);
     };
 
-    clearBtn.onclick = () => {
-        if (confirm("Clear entire schedule?")) {
-            document.querySelectorAll('.grid-cell:not(.day-label)').forEach(cell => {
-                cell.innerHTML = `<div class=\"drag-handle\"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
+    aiUpload.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const scanBtn = document.getElementById('scanBtn');
+        const scanText = document.getElementById('scanText');
+        const scanSpinner = document.getElementById('scanSpinner');
+
+        // 1. Start UI Loading State
+        scanText.innerText = "Scanning...";
+        scanSpinner.style.display = "block";
+        scanBtn.disabled = true;
+
+        try {
+            const formData = new FormData();
+            formData.append('scheduleImage', file);
+
+            const response = await fetch('http://localhost:3000/api/scan-schedule', {
+                method: 'POST',
+                body: formData
             });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Server error");
+            }
+
+            const data = await response.json();
+            const scheduleArray = data.schedule;
+
+            // --- STEP 1: IDENTIFY ACTIVE DAYS ---
+            const dayMap = { "monday": 0, "tuesday": 1, "wednesday": 2, "thursday": 3, "friday": 4, "saturday": 5, "sunday": 6 };
+
+            // Unique indexes of days that have classes
+            const activeDays = [...new Set(scheduleArray.map(item =>
+                dayMap[item.day.trim().toLowerCase()]
+            ))].sort((a, b) => a - b);
+
+            // Update the global store for persistence
+            activeDaysStore = activeDays;
+
+            // --- STEP 2: REBUILD TRIMMED GRID ---
+            initGrid(data.numCols, activeDays);
+
+            // --- STEP 3: POPULATE TRIMMED GRID ---
+            scheduleArray.forEach((item, index) => {
+                const targetDayIndex = dayMap[item.day.trim().toLowerCase()];
+                const trimmedDayPos = activeDays.indexOf(targetDayIndex);
+
+                // Re-calculate the cell ID based on trimmed grid width
+                const rowIndex = Math.floor(item.cellIndex / data.numCols);
+                const newCellIndex = (rowIndex * activeDays.length) + trimmedDayPos;
+
+                const cell = document.getElementById(`cell-${newCellIndex}`);
+                if (cell && item.subject) {
+                    const shortSubject = generateAcronym(item.subject);
+                    const displayTime = item.time.replace(/AM|PM/gi, "");
+                    const handleHTML = `<div class="drag-handle"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
+
+                    cell.innerHTML = handleHTML + `
+                    <div class="content-box">
+                        <p class="sub-txt">${shortSubject}</p> 
+                        <p class="time-txt">${displayTime}</p>
+                        <p class="room-txt">${item.room.toUpperCase() || "TBA"}</p>
+                    </div>`;
+
+                    // Success Animation
+                    setTimeout(() => {
+                        cell.classList.add('cell-success');
+                        setTimeout(() => cell.classList.remove('cell-success'), 600);
+                    }, index * 50);
+                }
+            });
+
+            if (typeof fillVacantStars === 'function') fillVacantStars();
+
+            // Finalize state
             saveToLocal();
+
+            if (navigator.vibrate) navigator.vibrate(50);
+            alert(`Layout Optimized! Displaying ${activeDays.length} active days.`);
+
+        } catch (err) {
+            console.error("Scan Error:", err);
+            alert("Scan failed: " + err.message);
+        } finally {
+            // Reset UI State
+            scanText.innerText = "✨ Scan Schedule Image";
+            scanSpinner.style.display = "none";
+            scanBtn.disabled = false;
+            aiUpload.value = "";
+        }
+    };
+    
+    clearBtn.onclick = () => {
+        if (confirm("Reset everything and start over?")) {
+            // 1. Wipe the new storage key
+            localStorage.removeItem('lab_schedule_final');
+
+            // 2. Reset the layout state
+            activeDaysStore = null;
+
+            // 3. Return to standard 5-day view
+            initGrid(5);
+
+            // 4. Save the now-empty state
+            saveToLocal();
+
+            safeVibrate([50, 100]);
+            alert("Schedule cleared!");
         }
     };
 
@@ -430,7 +713,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.onresize = autoScale;
     [yearStartLabel, yearEndLabel, termLabel].forEach(label => label.addEventListener('click', () => openModal(label, 'header')));
 
-    initGrid();
     loadFromLocal();
     autoScale();
 });

@@ -74,6 +74,8 @@
                             <option value="2">Wednesday</option>
                             <option value="3">Thursday</option>
                             <option value="4">Friday</option>
+                            <option value="5">Saturday</option>
+                            <option value="6">Sunday</option>
                         </select>
                     </div>
                     <div class="input-group">
@@ -85,6 +87,37 @@
                 <button id="addBtn" class="btn-primary">Add to Grid</button>
                 <button id="clearBtn" class="btn-secondary">Clear All</button>
             </div>
+
+            <div class="control-section"
+                style="border: 1px solid var(--accent-cyan); padding: 15px; border-radius: 16px; background: rgba(0, 243, 255, 0.05);">
+                <label style="color: var(--accent-cyan); margin-bottom: 10px; display: block;">AI Schedule Importer</label>
+                <p style="font-size: 11px; color: var(--text-dim); margin-bottom: 10px;">Upload a screenshot of your schedule to
+                    auto-fill the grid.</p>
+            
+                <input type="file" id="aiUpload" accept="image/*" style="display: none;">
+            
+                <button id="scanBtn" class="btn-primary"
+                    style="width: 100%; background: linear-gradient(135deg, #00f3ff, #ff00ff); border: none; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <span id="scanText">✨ Scan Schedule Image</span>
+                    <div id="scanSpinner"
+                        style="display: none; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 0.8s linear infinite;">
+                    </div>
+                </button>
+                
+                <style>
+                    @keyframes spin {
+                        0% {
+                            transform: rotate(0deg);
+                        }
+                
+                        100% {
+                            transform: rotate(360deg);
+                        }
+                    }
+                </style>
+            </div>
+            
+            <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 10px 0;">
 
             <div class="control-section">
                 <label>Select Theme</label>
@@ -140,14 +173,14 @@
     <div id="helpModal" class="modal-overlay">
         <div class="modal-content">
             <h2>Designer Guide</h2>
-            <ul class="guide-list" style="list-style: none; color: white; line-height: 2; margin: 20px 0;">
-                <li>🎯 <b>Tap any cell</b> to edit subjects or add stars.</li>
-                <li>✏️ <b>Tap headers</b> to change years and terms.</li>
-                <li>🔄 <b>Long-press & Drag</b> subjects to swap slots.</li>
-                <li>📋 <b>Move/Copy/Delete</b>: Tap a subject and use the buttons.</li>
-                <li>📸 <b>Download</b> to save your high-res PNG.</li>
+            <ul class="guide-list">
+                <li><span>✨</span> <b>Scan Image:</b> Upload a photo to auto-fill the grid and trim empty days.</li>
+                <li><span>🎯</span> <b>Tap any cell:</b> Edit subjects, add stars, or Move/Copy/Delete.</li>
+                <li><span>✏️</span> <b>Tap headers:</b> Edit years and terms directly on the wallpaper.</li>
+                <li><span>🔄</span> <b>Drag & Drop:</b> Long-press the handle (⋮⋮) to swap subjects between slots.</li>
+                <li><span>📸</span> <b>Download:</b> Save your schedule as a high-res PNG for your lockscreen.</li>
             </ul>
-            <button id="helpClose" class="btn-primary" style="width: 100%;">Got it!</button>
+            <button id="helpClose" class="btn-primary">Got it!</button>
         </div>
     </div>
 

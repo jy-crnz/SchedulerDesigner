@@ -330,12 +330,18 @@ button {
 /* 8. GRID & INTERACTIVE ELEMENTS */
 .schedule-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    /* Use the variable from JS, or default to 5 so it's always visible */
+    grid-template-columns: repeat(var(--cols, 5), 1fr);
+    /* 1 row for Day Labels + 5 rows for classes */
     grid-template-rows: 35px repeat(5, 1fr);
+
     border: 2px solid var(--grid-line);
+    min-height: 550px;
+    /* Added: Ensures the grid has shape even when empty */
     flex-grow: 1;
     background: var(--bg);
     touch-action: none !important;
+    transition: grid-template-columns 0.3s ease;
 }
 
 .grid-cell {
@@ -514,21 +520,75 @@ button {
     padding: 12px;
 }
 
-/* 12. TEXT STYLES */
-.star-icon {
-    font-size: 24px;
-    color: var(--secondary) !important;
-    opacity: 1 !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+@keyframes popIn {
+    0% {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
+.content-box {
+    animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 1px;
+}
+
+/* 12. TEXT STYLES */
+.star-icon {
+    font-size: 14px;
+    /* Slightly smaller for a cleaner gap */
+    color: var(--primary);
+    opacity: 0.2;
+    /* Makes it look like a placeholder/vacant slot */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    user-select: none;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.grid-cell:not(:has(.content-box)):not(.day-label) {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Update your .sub-txt block */
 .sub-txt {
     font-weight: 900;
     font-size: 10px;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.2px;
+    /* Reduced for better legibility */
     line-height: 1;
     text-transform: uppercase;
     color: var(--primary);
+    display: block;
+    width: 90%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    /* Adds "..." if an acronym is somehow too long */
+    margin-bottom: 2px;
+}
+
+/* Visual feedback when tapping a cell */
+.grid-cell:active {
+    background: rgba(var(--accent-cyan), 0.1);
+}
+
+/* Ensure the star stays visible even when exporting to PNG */
+#wallpaper-container.is-exporting .star-icon {
+    opacity: 0.15 !important;
+    color: var(--primary) !important;
 }
 
 .time-txt,
@@ -737,4 +797,106 @@ button {
 
 .btn-action-red:hover {
     background: rgba(211, 47, 47, 0.2);
+}
+
+.sub-txt {
+    font-weight: 900;
+    font-size: 10px;
+    letter-spacing: -0.5px;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--primary);
+    /* NEW: Ensures text fits by shrinking if too long */
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.grid-cell:empty,
+.grid-cell:not(:has(.content-box)):not(:has(.star-icon)) {
+    background: transparent;
+    border: 0.5px solid var(--grid-line);
+}
+
+/* Success Animation for Grid Cells */
+@keyframes successPulse {
+    0% {
+        background: rgba(0, 243, 255, 0);
+        transform: scale(1);
+    }
+
+    50% {
+        background: rgba(0, 243, 255, 0.3);
+        transform: scale(1.05);
+        box-shadow: 0 0 15px var(--accent-cyan);
+    }
+
+    100% {
+        background: rgba(255, 255, 255, 0);
+        transform: scale(1);
+    }
+}
+
+.cell-success {
+    animation: successPulse 0.6s ease-out;
+}
+
+/* --- DESIGNER GUIDE (MODAL) REFINEMENTS --- */
+
+/* Targets the list inside the help modal */
+.guide-list {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    /* Adds breathing room between items */
+}
+
+.guide-list li {
+    display: flex;
+    align-items: flex-start;
+    /* Keeps the emoji aligned with the first line */
+    gap: 8px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 12px;
+    white-space: normal;
+    /* Allows the description to wrap naturally */
+}
+
+/* Accentuates the feature labels in the guide */
+.guide-list b {
+    color: var(--accent-cyan);
+    font-weight: 700;
+    display: block;
+    /* Moves the description to a new line for better scannability */
+    margin-bottom: 2px;
+}
+
+/* Optional: Adds a subtle divider between the guide categories */
+.guide-list li:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 10px;
+}
+
+/* Ensures the modal title stands out */
+#helpModal h2 {
+    font-size: 1.4rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(to right, var(--accent-cyan), var(--accent-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+}
+
+.guide-list b, 
+.guide-list span.label-style {
+    display: inline !important; /* Prevents the force to a new line */
+    color: var(--accent-cyan);
+    margin-right: 5px;
+    white-space: nowrap; /* Keeps "Scan Image" from splitting */
 }

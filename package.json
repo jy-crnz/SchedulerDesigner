@@ -1,0 +1,30 @@
+{
+  "name": "schedgeneratorapp",
+  "version": "1.0.0",
+  "description": "**LabGrid** is a high-contrast, mobile-first schedule companion designed for high performance and custom lock-screen wallpaper generation. It features a refined design system, a robust mobile drag-and-drop engine, and persistent storage for seamless academic or professional tracking.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jy-crnz/SchedulerDesigner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jy-crnz/SchedulerDesigner/issues"
+  },
+  "homepage": "https://github.com/jy-crnz/SchedulerDesigner#readme",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "multer": "^2.0.2",
+    "openai": "^6.22.0"
+  }
+}
