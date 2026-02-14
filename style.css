@@ -906,21 +906,25 @@ button {
 #wallpaper-container.is-exporting .year-box,
 #wallpaper-container.is-exporting .term-box {
     display: grid !important;
-    place-items: center !important;
-    padding: 0 !important;
-
-    /* FIX: Added both standard and vendor-prefixed properties */
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+        place-items: center !important;
+        /* Perfect 2D centering */
+        color: var(--header-text) !important;
+        font-weight: 900;
+        border-radius: 12px;
+        height: 54px;
+        line-height: 1 !important;
+        /* Resets baseline shift */
+        padding: 0 !important;
+        margin: 0 !important;
 }
 
 #wallpaper-container.is-exporting .year-box span,
 #wallpaper-container.is-exporting .term-box span {
     display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    height: 100% !important;
-    width: 100% !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: 100%;
+        width: 100%;
 }
 
 /* 3. TEXT SHARPNESS: Fixes overlapping colons and cut-off letters */
