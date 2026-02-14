@@ -412,7 +412,7 @@ button {
             -webkit-font-smoothing: antialiased;
             padding-top: 0 !important;
                 /* Ensure no top spacing */
-  
+            padding-bottom: 6px !important;
             box-sizing: border-box !important;
 }
 
@@ -540,6 +540,9 @@ button {
     justify-content: center;
     width: 100%;
     gap: 1px;
+    /* FIX: Prevents container from clipping the bottom of letters */
+    overflow: visible !important;
+    padding: 2px 0;
 }
 
 /* 12. TEXT STYLES */
@@ -566,9 +569,9 @@ button {
 .sub-txt {
     font-weight: 900;
     font-size: 10px;
-    letter-spacing: -0.2px;
-    /* Reduced for better legibility */
-    line-height: 1;
+    letter-spacing: 0.2px;
+    /* FIX: Increased line-height prevents descenders from being cut off */
+    line-height: 1.3;
     text-transform: uppercase;
     color: var(--primary);
     display: block;
@@ -576,8 +579,7 @@ button {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    /* Adds "..." if an acronym is somehow too long */
-    margin-bottom: 2px;
+    margin-bottom: 3px;
 }
 
 /* Visual feedback when tapping a cell */
@@ -595,7 +597,10 @@ button {
 .room-txt {
     font-size: 7px;
     font-weight: 700;
-    line-height: 1.2;
+    /* FIX: tabular-nums ensures colons stay centered and numbers don't touch */
+    font-variant-numeric: tabular-nums;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
     color: var(--secondary);
 }
 
@@ -910,11 +915,13 @@ button {
 #wallpaper-container.is-exporting .room-txt {
     opacity: 1 !important;
     filter: none !important;
+    /* Ensure hardware-accelerated text rendering is off for cleaner capture */
+    -webkit-font-smoothing: antialiased;
 }
 
 /* 2. Make the Star icons slightly more visible for the lockscreen */
 #wallpaper-container.is-exporting .star-icon {
-    opacity: 0.4 !important;
+    opacity: 0.3 !important;
     /* Increase from 0.15 to make it pop */
     color: var(--primary) !important;
 }

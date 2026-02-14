@@ -553,18 +553,30 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadBtn.onclick = () => {
         wpContainer.classList.add('is-exporting');
 
-        // Small delay to ensure CSS classes are applied before capture
+        // Small delay to ensure CSS classes and opacity overrides are fully applied
         setTimeout(() => {
             html2canvas(wpContainer, {
-                scale: 3, // High resolution for sharp text
+                scale: 3,            // High resolution for sharp text
                 useCORS: true,
                 logging: false,
                 backgroundColor: null,
+                letterRendering: true, // Forces individual character positioning to prevent overlap
+                textShadow: false,
                 onclone: (clonedDoc) => {
-                    // Remove any scale transforms that might be active in the preview
                     const clonedContainer = clonedDoc.getElementById('wallpaper-container');
+
+                    // 1. Reset layout for capture
                     clonedContainer.style.transform = "none";
                     clonedContainer.style.margin = "0 auto";
+                    clonedContainer.style.transition = "none"; // Stop transitions from blurring the capture
+
+                    // 2. Fix number spacing: tabular-nums prevents numbers from touching the colon
+                    clonedContainer.style.fontVariantNumeric = "tabular-nums";
+
+                    // 3. Clean up UI "noise": Remove active animations or drag handles from the export
+                    clonedDoc.querySelectorAll('.grid-cell').forEach(c => {
+                        c.classList.remove('dragging', 'mobile-pulse', 'cell-success');
+                    });
                 }
             }).then(canvas => {
                 wpContainer.classList.remove('is-exporting');
