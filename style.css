@@ -412,7 +412,7 @@ button {
             -webkit-font-smoothing: antialiased;
             padding-top: 0 !important;
                 /* Ensure no top spacing */
-            padding-bottom: 6px !important;
+  
             box-sizing: border-box !important;
 }
 
@@ -899,4 +899,27 @@ button {
     color: var(--accent-cyan);
     margin-right: 5px;
     white-space: nowrap; /* Keeps "Scan Image" from splitting */
+}
+
+/* --- CRITICAL EXPORT FIX: Removes "Faded" look --- */
+
+/* 1. Force full opacity for the content-box and text during export */
+#wallpaper-container.is-exporting .content-box,
+#wallpaper-container.is-exporting .sub-txt,
+#wallpaper-container.is-exporting .time-txt,
+#wallpaper-container.is-exporting .room-txt {
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+/* 2. Make the Star icons slightly more visible for the lockscreen */
+#wallpaper-container.is-exporting .star-icon {
+    opacity: 0.4 !important;
+    /* Increase from 0.15 to make it pop */
+    color: var(--primary) !important;
+}
+
+/* 3. Ensure the grid lines remain sharp */
+#wallpaper-container.is-exporting .schedule-grid {
+    border: 2px solid var(--grid-line) !important;
 }
