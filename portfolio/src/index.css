@@ -1,0 +1,17 @@
+/* Reset — all visual styles live in App.css */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root {
+  /* Remove the default Vite centering/padding — App.css handles layout */
+  width: 100%;
+}

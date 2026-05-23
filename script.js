@@ -602,75 +602,85 @@ document.addEventListener('DOMContentLoaded', () => {
         scanBtn.disabled = true;
 
         try {
-            const formData = new FormData();
-            formData.append('scheduleImage', file);
+    const formData = new FormData();
+    formData.append('scheduleImage', file);
 
-            const response = await fetch('https://schedulerdesigner.onrender.com/api/scan-schedule', {
-                method: 'POST',
-                body: formData
-            });
+    // 🌍 1. Automatically detect if you are testing locally or on Vercel
+    const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Server error");
-            }
+    // 🔀 2. Assign the correct backend URL dynamically
+    const API_URL = isLocal 
+        ? 'http://localhost:3000/api/scan-schedule' 
+        : 'https://schedulerdesigner.onrender.com/api/scan-schedule';
 
-            const data = await response.json();
-            const scheduleArray = data.schedule;
+    const response = await fetch(API_URL, {
+        method: 'POST',
+        body: formData
+    });
 
-            // --- STEP 1: IDENTIFY ACTIVE DAYS ---
-            const dayMap = { "monday": 0, "tuesday": 1, "wednesday": 2, "thursday": 3, "friday": 4, "saturday": 5, "sunday": 6 };
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Server error");
+    }
 
-            // Unique indexes of days that have classes
-            const activeDays = [...new Set(scheduleArray.map(item =>
-                dayMap[item.day.trim().toLowerCase()]
-            ))].sort((a, b) => a - b);
+    const data = await response.json();
+    const scheduleArray = data.schedule;
 
-            // Update the global store for persistence
-            activeDaysStore = activeDays;
+    // --- STEP 1: IDENTIFY ACTIVE DAYS ---
+    const dayMap = { "monday": 0, "tuesday": 1, "wednesday": 2, "thursday": 3, "friday": 4, "saturday": 5, "sunday": 6 };
 
-            // --- STEP 2: REBUILD TRIMMED GRID ---
-            initGrid(data.numCols, activeDays);
+    // Unique indexes of days that have classes (with filter for safety)
+    const activeDays = [...new Set(scheduleArray.map(item =>
+        dayMap[item.day.trim().toLowerCase()]
+    ))].filter(d => d !== undefined).sort((a, b) => a - b);
 
-            // --- STEP 3: POPULATE TRIMMED GRID ---
-            scheduleArray.forEach((item, index) => {
-                const targetDayIndex = dayMap[item.day.trim().toLowerCase()];
-                const trimmedDayPos = activeDays.indexOf(targetDayIndex);
+    // Update the global store for persistence
+    activeDaysStore = activeDays;
 
-                // Re-calculate the cell ID based on trimmed grid width
-                const rowIndex = Math.floor(item.cellIndex / data.numCols);
-                const newCellIndex = (rowIndex * activeDays.length) + trimmedDayPos;
+    // --- STEP 2: REBUILD TRIMMED GRID ---
+    initGrid(data.numCols, activeDays);
 
-                const cell = document.getElementById(`cell-${newCellIndex}`);
-                if (cell && item.subject) {
-                    const shortSubject = generateAcronym(item.subject);
-                    const displayTime = item.time.replace(/AM|PM/gi, "");
-                    const handleHTML = `<div class="drag-handle"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
+    // --- STEP 3: POPULATE TRIMMED GRID ---
+    scheduleArray.forEach((item, index) => {
+        const targetDayIndex = dayMap[item.day.trim().toLowerCase()];
+        if (targetDayIndex === undefined) return; // Failsafe for AI misspellings
 
-                    cell.innerHTML = handleHTML + `
-                    <div class="content-box">
-                        <p class="sub-txt">${shortSubject}</p> 
-                        <p class="time-txt">${displayTime}</p>
-                        <p class="room-txt">${item.room.toUpperCase() || "TBA"}</p>
-                    </div>`;
+        const trimmedDayPos = activeDays.indexOf(targetDayIndex);
 
-                    // Success Animation
-                    setTimeout(() => {
-                        cell.classList.add('cell-success');
-                        setTimeout(() => cell.classList.remove('cell-success'), 600);
-                    }, index * 50);
-                }
-            });
+        // Re-calculate the cell ID based on trimmed grid width
+        const rowIndex = Math.floor(item.cellIndex / data.numCols);
+        const newCellIndex = (rowIndex * activeDays.length) + trimmedDayPos;
 
-            if (typeof fillVacantStars === 'function') fillVacantStars();
+        const cell = document.getElementById(`cell-${newCellIndex}`);
+        if (cell && item.subject) {
+            const shortSubject = generateAcronym(item.subject);
+            const displayTime = item.time.replace(/AM|PM/gi, "");
+            const handleHTML = `<div class="drag-handle"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
 
-            // Finalize state
-            saveToLocal();
+            cell.innerHTML = handleHTML + `
+            <div class="content-box">
+                <p class="sub-txt">${shortSubject}</p> 
+                <p class="time-txt">${displayTime}</p>
+                <p class="room-txt">${item.room.toUpperCase() || "TBA"}</p>
+            </div>`;
 
-            if (navigator.vibrate) navigator.vibrate(50);
-            alert(`Layout Optimized! Displaying ${activeDays.length} active days.`);
+            // Success Animation
+            setTimeout(() => {
+                cell.classList.add('cell-success');
+                setTimeout(() => cell.classList.remove('cell-success'), 600);
+            }, index * 50);
+        }
+    });
 
-        } catch (err) {
+    if (typeof fillVacantStars === 'function') fillVacantStars();
+
+    // Finalize state
+    saveToLocal();
+
+    if (navigator.vibrate) navigator.vibrate(50);
+    alert(`Layout Optimized! Displaying ${activeDays.length} active days.`);
+
+} catch (err) {
             console.error("Scan Error:", err);
             alert("Scan failed: " + err.message);
         } finally {

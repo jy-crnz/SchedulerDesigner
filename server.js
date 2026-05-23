@@ -7,9 +7,11 @@ require('dotenv').config();
 const app = express();
 
 const allowedOrigins = [
-    'https://scheduler-designer.vercel.app',                             // Main Domain
-    'https://scheduler-designer-6dxxqd53w-jy-crnzs-projects.vercel.app', // Specific Deployment Link
-    'http://localhost:5500'                                              // Local testing
+    'https://scheduler-designer.vercel.app', 
+    'https://scheduler-designer-6dxxqd53w-jy-crnzs-projects.vercel.app', 
+    'http://localhost:5500',   
+    'http://127.0.0.1:5500',   // 👈 ENFORCE THIS LINE EXACTLY
+    'http://localhost:3000'    
 ];
 
 app.use(cors({
@@ -67,6 +69,15 @@ function getStrictCellIndex(day, timeRange, numCols) {
 }
 
 const PORT = process.env.PORT || 3000;
+
+// Add a root health check route to verify the server is active
+app.get('/', (req, res) => {
+    res.json({ 
+        status: "online", 
+        message: "Schedule Designer AI Backend is running successfully!",
+        timestamp: new Date()
+    });
+});
 
 app.post('/api/scan-schedule', upload.single('scheduleImage'), async (req, res) => {
     try {
